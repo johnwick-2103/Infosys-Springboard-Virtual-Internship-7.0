@@ -1,0 +1,1144 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile & Settings - Event Management System{% endblock %}
+{% block page_title %}Account Profile &amp; Settings{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Settings Layout Grid */
+    .settings-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 28px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 5;
+    }
+
+    /* Sidebar Navigation */
+    .settings-sidebar {
+        background: var(--content-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: 22px 18px;
+        height: fit-content;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        position: relative;
+        z-index: 10;
+    }
+
+    .user-profile-summary {
+        text-align: center;
+        padding-bottom: 20px;
+        margin-bottom: 18px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 14px auto;
+        border-radius: 50%;
+        border: 4px solid var(--border-color);
+        overflow: hidden;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .profile-avatar-wrapper:hover {
+        border-color: var(--primary-color);
+        transform: scale(1.03);
+    }
+
+    .profile-avatar-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-avatar-upload-btn {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(15, 23, 42, 0.82);
+        color: #f8fafc;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 0;
+        text-align: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.25s ease;
+    }
+
+    .profile-avatar-wrapper:hover .profile-avatar-upload-btn {
+        opacity: 1;
+    }
+
+    .user-profile-summary .user-name {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--header-text);
+        margin-bottom: 2px;
+    }
+
+    .user-profile-summary .user-role-badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 12px;
+        border-radius: 12px;
+        background: var(--accent-light);
+        color: var(--primary-color);
+        margin-top: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Sidebar Menu Items */
+    .settings-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 16px;
+        border-radius: 10px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        transition: all 0.25s ease;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        cursor: pointer !important;
+        pointer-events: auto !important;
+        position: relative;
+        user-select: none;
+    }
+
+    .settings-nav-item:hover {
+        background: var(--table-row-hover);
+        color: var(--header-text);
+        padding-left: 20px;
+    }
+
+    .settings-nav-item.active {
+        background: var(--primary-gradient) !important;
+        color: white !important;
+        box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+    }
+
+    .settings-nav-item i {
+        width: 20px;
+        text-align: center;
+        font-size: 15px;
+        pointer-events: none;
+    }
+
+    .settings-nav-item.danger-nav-item {
+        color: #ef4444;
+    }
+
+    .settings-nav-item.danger-nav-item:hover {
+        background: rgba(239, 68, 68, 0.08);
+        color: #dc2626;
+    }
+
+    .settings-nav-item.danger-nav-item.active {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+        color: white !important;
+        box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+    }
+
+    /* Main Content Container */
+    .settings-content {
+        background: var(--content-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 18px;
+        padding: 32px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        min-height: 520px;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Form Fields & Controls */
+    .form-control, .form-select {
+        pointer-events: auto !important;
+        cursor: text !important;
+        user-select: text !important;
+    }
+    select.form-select {
+        cursor: pointer !important;
+    }
+
+    /* Tab switching smooth fade animation */
+    .settings-tab-content {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.25s ease-in-out;
+    }
+
+    .settings-tab-content.active {
+        display: block !important;
+        opacity: 1 !important;
+        animation: tabFadeIn 0.3s ease-in-out forwards;
+    }
+
+    @keyframes tabFadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--header-text);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+    }
+
+    .section-header-desc {
+        font-size: 13px;
+        color: var(--sidebar-text);
+        margin-top: 4px;
+    }
+
+    .form-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    /* Cards & Panels */
+    .settings-card {
+        background: var(--body-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.2s ease;
+    }
+
+    .settings-card:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    .settings-card-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--header-text);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Password Requirements & Strength */
+    .password-strength-container {
+        margin-top: 12px;
+        margin-bottom: 16px;
+    }
+
+    .password-strength-bar {
+        height: 6px;
+        border-radius: 3px;
+        background: #e2e8f0;
+        overflow: hidden;
+        margin-bottom: 6px;
+    }
+
+    .password-strength-fill {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .password-strength-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--sidebar-text);
+    }
+
+    .req-checklist {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 0 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 8px;
+    }
+
+    .req-checklist li {
+        font-size: 13px;
+        color: var(--sidebar-text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.2s ease;
+    }
+
+    .req-checklist li i {
+        font-size: 14px;
+        color: #cbd5e1;
+    }
+
+    .req-checklist li.valid {
+        color: #10b981;
+        font-weight: 600;
+    }
+
+    .req-checklist li.valid i {
+        color: #10b981;
+    }
+
+    /* Theme Cards */
+    .theme-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .theme-card {
+        border: 2px solid var(--border-color);
+        background: var(--body-bg);
+        border-radius: 12px;
+        padding: 14px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .theme-card:hover {
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .theme-card.active {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .theme-card-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin: 0 auto 8px auto;
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .theme-card.active::after {
+        content: '\f058';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: var(--primary-color);
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-size: 13px;
+    }
+
+    /* Activity Timeline */
+    .activity-timeline {
+        position: relative;
+        padding-left: 24px;
+        margin-top: 15px;
+    }
+
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--border-color);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 22px;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: 4px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        border: 2px solid var(--content-bg);
+        box-shadow: 0 0 0 2px var(--primary-color);
+    }
+
+    .timeline-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 4px;
+    }
+
+    .timeline-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--header-text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .timeline-date {
+        font-size: 12px;
+        color: var(--sidebar-text);
+        font-weight: 500;
+    }
+
+    .timeline-desc {
+        font-size: 13px;
+        color: var(--sidebar-text);
+        margin: 0;
+    }
+
+    /* Danger Zone Styling */
+    .danger-zone-container {
+        border: 2px solid #ef4444;
+        background: rgba(239, 68, 68, 0.03);
+        border-radius: 16px;
+        padding: 24px;
+    }
+
+    .danger-card {
+        background: var(--content-bg);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    @media(max-width: 900px) {
+        .settings-container {
+            grid-template-columns: 1fr;
+        }
+        .form-grid-2 {
+            grid-template-columns: 1fr;
+        }
+        .danger-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<!-- Immediate Inline Tab Switcher Script -->
+<script>
+window.switchTab = function(tabId) {
+    if (!tabId) return;
+
+    // 1. Update navigation items active state
+    var navButtons = document.querySelectorAll(".settings-nav-item");
+    navButtons.forEach(function(btn) {
+        if (btn.getAttribute("data-tab") === tabId) {
+            btn.classList.add("active");
+        } else {
+            btn.classList.remove("active");
+        }
+    });
+
+    // 2. Update tab content panels
+    var tabPanels = document.querySelectorAll(".settings-tab-content");
+    tabPanels.forEach(function(panel) {
+        if (panel.id === "tab-" + tabId) {
+            panel.classList.add("active");
+        } else {
+            panel.classList.remove("active");
+        }
+    });
+
+    // 3. Update URL query param quietly
+    try {
+        var url = new URL(window.location);
+        url.searchParams.set('tab', tabId);
+        window.history.pushState({}, '', url);
+    } catch(e) {}
+};
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="settings-container">
+    
+    <!-- 1. Left Sidebar Menu Items -->
+    <div class="settings-sidebar animate__animated animate__fadeInLeft">
+        <div class="user-profile-summary">
+            <div class="profile-avatar-wrapper" id="sidebarAvatarContainer">
+                {% if profile.profile_picture %}
+                    <img id="avatarPreview" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                {% else %}
+                    <img id="avatarPreview" src="https://ui-avatars.com/api/?name={{ user.first_name|default:user.username }}&background=3b82f6&color=fff&size=110" alt="Profile Picture">
+                {% endif %}
+                <label for="id_profile_picture_quick" class="profile-avatar-upload-btn">
+                    <i class="fas fa-camera me-1"></i> Upload
+                </label>
+            </div>
+            <h6 class="user-name">{{ user.first_name|default:user.username }} {{ user.last_name|default:"" }}</h6>
+            <p class="text-muted small mb-1">@{{ user.username }}</p>
+            <span class="user-role-badge">
+                {% if user.is_staff %}<i class="fas fa-shield-alt me-1"></i> Admin{% else %}<i class="fas fa-user-check me-1"></i> {{ profile.designation|default:"Organizer" }}{% endif %}
+            </span>
+        </div>
+
+        <nav class="settings-nav" id="settingsSidebarNav">
+            <button type="button" class="settings-nav-item {% if active_tab == 'account' or not active_tab %}active{% endif %}" data-tab="account" onclick="window.switchTab('account')">
+                <i class="fas fa-user-cog"></i> Account Settings
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'security' %}active{% endif %}" data-tab="security" onclick="window.switchTab('security')">
+                <i class="fas fa-shield-alt"></i> Password &amp; Security
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'notifications' %}active{% endif %}" data-tab="notifications" onclick="window.switchTab('notifications')">
+                <i class="fas fa-bell"></i> Notifications
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'appearance' %}active{% endif %}" data-tab="appearance" onclick="window.switchTab('appearance')">
+                <i class="fas fa-palette"></i> Appearance
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'privacy' %}active{% endif %}" data-tab="privacy" onclick="window.switchTab('privacy')">
+                <i class="fas fa-user-shield"></i> Privacy Settings
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'preferences' %}active{% endif %}" data-tab="preferences" onclick="window.switchTab('preferences')">
+                <i class="fas fa-sliders-h"></i> Preferences
+            </button>
+            <button type="button" class="settings-nav-item {% if active_tab == 'activity' %}active{% endif %}" data-tab="activity" onclick="window.switchTab('activity')">
+                <i class="fas fa-history"></i> Activity Log
+            </button>
+            <button type="button" class="settings-nav-item danger-nav-item {% if active_tab == 'danger' %}active{% endif %}" data-tab="danger" onclick="window.switchTab('danger')">
+                <i class="fas fa-exclamation-triangle"></i> Danger Zone
+            </button>
+        </nav>
+    </div>
+
+    <!-- Hidden Quick Avatar Form -->
+    <form id="quickAvatarForm" action="{% url 'profile' %}" method="POST" enctype="multipart/form-data" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="change_profile_picture">
+        <input type="file" name="profile_picture" id="id_profile_picture_quick" accept="image/*" onchange="document.getElementById('quickAvatarForm').submit();">
+    </form>
+
+    <!-- Right Side Content Panel -->
+    <div class="settings-content animate__animated animate__fadeInRight">
+
+        <!-- SECTION 1: ACCOUNT SETTINGS -->
+        <div id="tab-account" class="settings-tab-content {% if active_tab == 'account' or not active_tab %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-user-cog text-primary"></i> Account Settings</h4>
+                    <p class="section-header-desc">Manage your profile photo, identity, email, and contact number.</p>
+                </div>
+            </div>
+
+            <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_account">
+
+                <!-- Profile Photo -->
+                <div class="settings-card">
+                    <div class="settings-card-title"><i class="fas fa-camera text-primary"></i> Profile Photo</div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="profile-avatar-wrapper m-0" style="width: 70px; height: 70px;">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+                            {% else %}
+                                <img src="https://ui-avatars.com/api/?name={{ user.first_name|default:user.username }}&background=3b82f6&color=fff&size=70" alt="Profile Picture">
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <input type="file" name="profile_picture" class="form-control" accept="image/*">
+                            <small class="text-muted" style="font-size: 11px;">Upload JPG, PNG or GIF (Max 5MB)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid-2 mb-3">
+                    <div class="form-group">
+                        <label class="fw-semibold mb-1 text-dark">First Name</label>
+                        <input type="text" name="first_name" class="form-control" value="{{ user.first_name|default:'' }}" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="fw-semibold mb-1 text-dark">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" value="{{ user.last_name|default:'' }}" placeholder="Last Name">
+                    </div>
+                </div>
+
+                <div class="form-grid-2 mb-3">
+                    <div class="form-group">
+                        <label class="fw-semibold mb-1 text-dark">Username</label>
+                        <input type="text" name="username" class="form-control" value="{{ user.username }}" placeholder="Username" required>
+                        <small class="text-muted d-block mt-1" style="font-size:11px;">Unique handle for logging in.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="fw-semibold mb-1 text-dark">Email Address</label>
+                        <input type="email" name="email" class="form-control" value="{{ user.email|default:'' }}" placeholder="name@gmail.com" required>
+                        <small class="text-muted d-block mt-1" style="font-size:11px;">Must end with @gmail.com</small>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="fw-semibold mb-1 text-dark">Phone Number</label>
+                    <input type="text" name="phone" class="form-control" value="{{ profile.phone|default:'' }}" placeholder="10-digit mobile number">
+                </div>
+
+                <div class="form-group mb-0">
+                    <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-bold"><i class="fas fa-save me-2"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- SECTION 2: PASSWORD & SECURITY -->
+        <div id="tab-security" class="settings-tab-content {% if active_tab == 'security' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-shield-alt text-warning"></i> Password &amp; Security</h4>
+                    <p class="section-header-desc">Update your password and view live strength diagnostics.</p>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <form action="{% url 'profile' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="change_password">
+
+                    <div class="form-group mb-3">
+                        <label for="id_old_password" class="fw-semibold mb-1 text-dark">Current Password</label>
+                        <input type="password" name="old_password" id="id_old_password" class="form-control" placeholder="Enter current password" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="id_new_password1" class="fw-semibold mb-1 text-dark">New Password</label>
+                        <div class="position-relative">
+                            <input type="password" name="new_password1" id="id_new_password1" class="form-control" placeholder="Enter new password" oninput="checkPasswordRequirements(this.value)" required>
+                            <i class="fas fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;" onclick="togglePasswordVisibility('id_new_password1', this)"></i>
+                        </div>
+                        
+                        <!-- Password Strength Indicator -->
+                        <div class="password-strength-container mt-2">
+                            <div class="password-strength-bar">
+                                <div id="strengthFill" class="password-strength-fill"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span id="strengthText" class="password-strength-text">Password Strength: Enter password</span>
+                            </div>
+                        </div>
+
+                        <!-- Password Requirements Checklist -->
+                        <div class="mt-3 p-3 rounded" style="background: var(--content-bg); border: 1px solid var(--border-color);">
+                            <span class="small fw-bold text-dark d-block mb-2"><i class="fas fa-tasks me-1 text-primary"></i> Password Requirements:</span>
+                            <ul class="req-checklist">
+                                <li id="req-length"><i class="fas fa-circle-notch"></i> Minimum 8 characters</li>
+                                <li id="req-uppercase"><i class="fas fa-circle-notch"></i> One uppercase letter</li>
+                                <li id="req-lowercase"><i class="fas fa-circle-notch"></i> One lowercase letter</li>
+                                <li id="req-number"><i class="fas fa-circle-notch"></i> One number</li>
+                                <li id="req-special"><i class="fas fa-circle-notch"></i> One special character</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="id_new_password2" class="fw-semibold mb-1 text-dark">Confirm Password</label>
+                        <div class="position-relative">
+                            <input type="password" name="new_password2" id="id_new_password2" class="form-control" placeholder="Re-enter new password" required>
+                            <i class="fas fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-muted" style="cursor: pointer;" onclick="togglePasswordVisibility('id_new_password2', this)"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning px-4 py-2 rounded-pill fw-bold text-dark"><i class="fas fa-key me-2"></i> Update Password</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- SECTION 3: NOTIFICATIONS -->
+        <div id="tab-notifications" class="settings-tab-content {% if active_tab == 'notifications' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-bell text-primary"></i> Notifications</h4>
+                    <p class="section-header-desc">Toggle email notifications and system alert preferences.</p>
+                </div>
+            </div>
+
+            <form action="{% url 'profile' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_notifications">
+
+                <div class="settings-card">
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_email_notifications" name="email_notifications" {% if profile.email_notifications %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_email_notifications">Email Notifications</label>
+                        <p class="text-muted small mb-0 ms-4">Master control to receive email announcements and digest emails.</p>
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_event_updates" name="event_updates" {% if profile.event_updates %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_event_updates">Event Updates</label>
+                        <p class="text-muted small mb-0 ms-4">Receive notifications regarding schedule changes, venue updates, and new events.</p>
+                    </div>
+
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_new_member" name="new_member_notifications" {% if profile.new_member_notifications %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_new_member">Member Notifications</label>
+                        <p class="text-muted small mb-0 ms-4">Get alerted when new participants register for your managed events.</p>
+                    </div>
+
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_report_notif" name="report_notifications" {% if profile.report_notifications %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_report_notif">Report Notifications</label>
+                        <p class="text-muted small mb-0 ms-4">Receive weekly performance summaries and attendance analytics.</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-bold"><i class="fas fa-save me-2"></i> Save Notifications</button>
+            </form>
+        </div>
+
+
+        <!-- SECTION 4: APPEARANCE -->
+        <div id="tab-appearance" class="settings-tab-content {% if active_tab == 'appearance' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-palette text-success"></i> Appearance</h4>
+                    <p class="section-header-desc">Customize theme modes and display font sizing.</p>
+                </div>
+            </div>
+
+            <form action="{% url 'profile' %}" method="POST" id="appearanceForm">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_appearance">
+                <input type="hidden" name="theme_preference" id="appearanceThemeInput" value="{{ profile.theme_preference }}">
+
+                <!-- Theme Selection Cards -->
+                <div class="form-group mb-4">
+                    <label class="fw-bold mb-3 text-dark">Theme Options</label>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="theme-card {% if profile.theme_preference == 'light' %}active{% endif %}" onclick="selectThemeCard('light')">
+                                <div class="theme-card-dot" style="background: #f8fafc; border: 1px solid #cbd5e1;"></div>
+                                <span class="fw-bold d-block text-dark">Light Theme</span>
+                                <small class="text-muted">Clean bright interface</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="theme-card {% if profile.theme_preference == 'slate' %}active{% endif %}" onclick="selectThemeCard('slate')">
+                                <div class="theme-card-dot" style="background: #0f172a;"></div>
+                                <span class="fw-bold d-block text-dark">Dark Theme</span>
+                                <small class="text-muted">Sleek dark interface</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="theme-card {% if profile.theme_preference == 'navy' %}active{% endif %}" onclick="selectThemeCard('navy')">
+                                <div class="theme-card-dot" style="background: #1e3c72;"></div>
+                                <span class="fw-bold d-block text-dark">System Theme</span>
+                                <small class="text-muted">Royal Navy accent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Font Size Preference -->
+                <div class="settings-card mb-4">
+                    <label for="font_size_select" class="fw-bold mb-2 text-dark">Font Size</label>
+                    <select name="font_size" id="font_size_select" class="form-select form-control">
+                        <option value="small">Small (13px)</option>
+                        <option value="medium" selected>Medium (15px - Default)</option>
+                        <option value="large">Large (17px)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success px-4 py-2 rounded-pill fw-bold"><i class="fas fa-paint-brush me-2"></i> Save Appearance</button>
+            </form>
+        </div>
+
+
+        <!-- SECTION 5: PRIVACY SETTINGS -->
+        <div id="tab-privacy" class="settings-tab-content {% if active_tab == 'privacy' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-user-shield text-info"></i> Privacy Settings</h4>
+                    <p class="section-header-desc">Control profile visibility and contact privacy.</p>
+                </div>
+            </div>
+
+            <form action="{% url 'profile' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_privacy">
+
+                <div class="settings-card">
+                    <div class="form-group mb-4">
+                        <label for="id_profile_visibility" class="fw-bold mb-1 text-dark">Profile Visibility</label>
+                        <select name="profile_visibility" id="id_profile_visibility" class="form-select form-control">
+                            <option value="Public" {% if profile.profile_visibility == 'Public' %}selected{% endif %}>Public (Everyone can see profile)</option>
+                            <option value="Members" {% if profile.profile_visibility == 'Members' %}selected{% endif %}>Members Only (Registered users)</option>
+                            <option value="Private" {% if profile.profile_visibility == 'Private' %}selected{% endif %}>Private (Only me &amp; Admins)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_show_email" name="show_email" {% if profile.show_email %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_show_email">Show Email</label>
+                        <p class="text-muted small mb-0 ms-4">Display email address on public profile page.</p>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_show_phone" name="show_phone" {% if profile.show_phone %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_show_phone">Show Phone Number</label>
+                        <p class="text-muted small mb-0 ms-4">Display phone number to verified event organizers.</p>
+                    </div>
+
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" role="switch" id="sw_account_privacy" name="allow_contact_requests" {% if profile.allow_contact_requests %}checked{% endif %}>
+                        <label class="form-check-label ms-2 fw-bold text-dark" for="sw_account_privacy">Account Privacy</label>
+                        <p class="text-muted small mb-0 ms-4">Allow member contact requests and direct messages.</p>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-info px-4 py-2 rounded-pill text-white fw-bold"><i class="fas fa-lock me-2"></i> Save Privacy</button>
+            </form>
+        </div>
+
+
+        <!-- SECTION 6: PREFERENCES -->
+        <div id="tab-preferences" class="settings-tab-content {% if active_tab == 'preferences' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-sliders-h text-warning"></i> Preferences</h4>
+                    <p class="section-header-desc">Set regional formats, timezone, and portal layout.</p>
+                </div>
+            </div>
+
+            <form action="{% url 'profile' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_preferences">
+
+                <div class="settings-card">
+                    <div class="form-grid-2 mb-3">
+                        <div>
+                            <label for="pref_language" class="fw-bold mb-1 text-dark">Language</label>
+                            <select name="language" id="pref_language" class="form-select form-control">
+                                {% for val, label in profile.LANGUAGE_CHOICES %}
+                                    <option value="{{ val }}" {% if profile.language == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="pref_timezone" class="fw-bold mb-1 text-dark">Time Zone</label>
+                            <select name="timezone" id="pref_timezone" class="form-select form-control">
+                                {% for val, label in profile.TIMEZONE_CHOICES %}
+                                    <option value="{{ val }}" {% if profile.timezone == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2 mb-3">
+                        <div>
+                            <label for="pref_date_format" class="fw-bold mb-1 text-dark">Date Format</label>
+                            <select name="date_format" id="pref_date_format" class="form-select form-control">
+                                <option value="DD/MM/YYYY" {% if profile.date_format == 'DD/MM/YYYY' %}selected{% endif %}>DD/MM/YYYY (31/07/2026)</option>
+                                <option value="MM/DD/YYYY" {% if profile.date_format == 'MM/DD/YYYY' %}selected{% endif %}>MM/DD/YYYY (07/31/2026)</option>
+                                <option value="YYYY-MM-DD" {% if profile.date_format == 'YYYY-MM-DD' %}selected{% endif %}>YYYY-MM-DD (2026-07-31)</option>
+                                <option value="D MMM YYYY" {% if profile.date_format == 'D MMM YYYY' %}selected{% endif %}>D MMM YYYY (31 Jul 2026)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="pref_dashboard_layout" class="fw-bold mb-1 text-dark">Dashboard Layout</label>
+                            <select name="dashboard_layout" id="pref_dashboard_layout" class="form-select form-control">
+                                <option value="Grid" {% if profile.dashboard_layout == 'Grid' %}selected{% endif %}>Grid View (Card Layout)</option>
+                                <option value="List" {% if profile.dashboard_layout == 'List' %}selected{% endif %}>List View (Compact Table)</option>
+                                <option value="Compact" {% if profile.dashboard_layout == 'Compact' %}selected{% endif %}>Compact View</option>
+                                <option value="Detailed" {% if profile.dashboard_layout == 'Detailed' %}selected{% endif %}>Detailed Analytics View</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-warning px-4 py-2 rounded-pill text-dark fw-bold"><i class="fas fa-check me-2"></i> Save Preferences</button>
+            </form>
+        </div>
+
+
+        <!-- SECTION 7: ACTIVITY LOG -->
+        <div id="tab-activity" class="settings-tab-content {% if active_tab == 'activity' %}active{% endif %}">
+            <div class="section-header">
+                <div>
+                    <h4 class="section-header-title"><i class="fas fa-history text-primary"></i> Activity Log</h4>
+                    <p class="section-header-desc">Display recent account activity and audit trails.</p>
+                </div>
+            </div>
+
+            <div class="activity-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <div class="timeline-title"><i class="fas fa-sign-in-alt text-primary me-2"></i> Login</div>
+                        <span class="timeline-date"><i class="far fa-clock me-1"></i> 29 Jul 2026, 10:12 AM</span>
+                    </div>
+                    <p class="timeline-desc">Logged in successfully from Google Chrome on Windows 11.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <div class="timeline-title"><i class="fas fa-key text-warning me-2"></i> Password Changed</div>
+                        <span class="timeline-date"><i class="far fa-clock me-1"></i> 31 Jul 2026, 8:15 PM</span>
+                    </div>
+                    <p class="timeline-desc">Account password updated from Password & Security settings.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <div class="timeline-title"><i class="fas fa-calendar-plus text-success me-2"></i> Event Created</div>
+                        <span class="timeline-date"><i class="far fa-clock me-1"></i> 28 Jul 2026, 2:45 PM</span>
+                    </div>
+                    <p class="timeline-desc">Created and published "Annual Tech Symposium 2026".</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <div class="timeline-title"><i class="fas fa-user-plus text-info me-2"></i> Member Added</div>
+                        <span class="timeline-date"><i class="far fa-clock me-1"></i> 27 Jul 2026, 11:00 AM</span>
+                    </div>
+                    <p class="timeline-desc">Registered new participant to Workshop Series.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <div class="timeline-title"><i class="fas fa-user-edit text-purple me-2" style="color:#8b5cf6;"></i> Profile Updated</div>
+                        <span class="timeline-date"><i class="far fa-clock me-1"></i> 30 Jul 2026, 4:30 PM</span>
+                    </div>
+                    <p class="timeline-desc">Updated profile contact details and photo.</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- SECTION 8: DANGER ZONE -->
+        <div id="tab-danger" class="settings-tab-content {% if active_tab == 'danger' %}active{% endif %}">
+            <div class="section-header border-danger">
+                <div>
+                    <h4 class="section-header-title text-danger"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+                    <p class="section-header-desc">Irreversible account and system actions.</p>
+                </div>
+            </div>
+
+            <div class="danger-zone-container">
+                <!-- Logout Button -->
+                <div class="danger-card">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1"><i class="fas fa-sign-out-alt text-danger me-2"></i> Account Logout</h6>
+                        <p class="small text-muted mb-0">End your active session on this device.</p>
+                    </div>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger rounded-pill px-4 fw-bold flex-shrink-0">
+                        <i class="fas fa-sign-out-alt me-1"></i> Logout
+                    </a>
+                </div>
+
+                <!-- Reset Settings Button -->
+                <div class="danger-card">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-1"><i class="fas fa-undo text-danger me-2"></i> Reset Settings</h6>
+                        <p class="small text-muted mb-0">Reset theme, preferences, and privacy settings to default values.</p>
+                    </div>
+                    <form action="{% url 'profile' %}" method="POST" class="m-0">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reset_settings">
+                        <button type="submit" class="btn btn-outline-danger rounded-pill px-4 fw-bold flex-shrink-0" onclick="return confirm('Are you sure you want to reset all preferences to default values?');">
+                            <i class="fas fa-sync-alt me-1"></i> Reset Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Delete Account Button -->
+                <div class="danger-card">
+                    <div>
+                        <h6 class="fw-bold text-danger mb-1"><i class="fas fa-trash-alt me-2"></i> Delete Account</h6>
+                        <p class="small text-muted mb-0">Permanently delete your account and remove all personal data.</p>
+                    </div>
+                    {% if user.is_staff %}
+                        <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold flex-shrink-0" onclick="confirmDeleteAccount()">
+                            <i class="fas fa-user-slash me-1"></i> Delete Account
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-secondary rounded-pill px-4 fw-bold flex-shrink-0" disabled title="Only Administrators can delete user accounts">
+                            <i class="fas fa-lock me-1"></i> Admin Only
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal for Delete Account Confirmation -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i> Confirm Account Deletion</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-dark">
+        <p>Are you absolutely sure you want to delete your account <strong>@{{ user.username }}</strong>?</p>
+        <p class="text-danger small mb-0"><i class="fas fa-info-circle me-1"></i> This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+        <form action="{% url 'profile' %}" method="POST" class="m-0">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="delete_account">
+            <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">Delete Permanently</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Attach click listener to all sidebar navigation items
+    var sidebarNav = document.getElementById("settingsSidebarNav");
+    if (sidebarNav) {
+        sidebarNav.addEventListener("click", function(e) {
+            var targetBtn = e.target.closest(".settings-nav-item");
+            if (targetBtn) {
+                var tabId = targetBtn.getAttribute("data-tab");
+                if (tabId) {
+                    window.switchTab(tabId);
+                }
+            }
+        });
+    }
+
+    // 2. Read initial active tab from URL parameters or server default
+    var urlParams = new URLSearchParams(window.location.search);
+    var initialTab = urlParams.get('tab') || "{{ active_tab|default:'account' }}";
+    window.switchTab(initialTab || 'account');
+});
+
+// Interactive Theme Selection Cards
+function selectThemeCard(themeVal) {
+    document.querySelectorAll('.theme-card').forEach(function(c) { c.classList.remove('active'); });
+    document.querySelectorAll('.theme-card[onclick*="' + themeVal + '"]').forEach(function(c) { c.classList.add('active'); });
+    
+    var hiddenInp = document.getElementById('appearanceThemeInput');
+    if (hiddenInp) hiddenInp.value = themeVal;
+
+    document.documentElement.setAttribute('data-theme', themeVal);
+    localStorage.setItem('app-theme', themeVal);
+}
+
+// Toggle password text visibility
+function togglePasswordVisibility(inputId, iconElem) {
+    var input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === "password") {
+        input.type = "text";
+        iconElem.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        input.type = "password";
+        iconElem.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+// Password Strength & Requirements Validator
+function checkPasswordRequirements(val) {
+    var reqLength = document.getElementById("req-length");
+    var reqUpper = document.getElementById("req-uppercase");
+    var reqLower = document.getElementById("req-lowercase");
+    var reqNumber = document.getElementById("req-number");
+    var reqSpecial = document.getElementById("req-special");
+
+    var isLength = val.length >= 8;
+    var isUpper = /[A-Z]/.test(val);
+    var isLower = /[a-z]/.test(val);
+    var isNumber = /[0-9]/.test(val);
+    var isSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(val);
+
+    toggleReqStatus(reqLength, isLength);
+    toggleReqStatus(reqUpper, isUpper);
+    toggleReqStatus(reqLower, isLower);
+    toggleReqStatus(reqNumber, isNumber);
+    toggleReqStatus(reqSpecial, isSpecial);
+
+    var score = 0;
+    if (isLength) score++;
+    if (isUpper) score++;
+    if (isLower) score++;
+    if (isNumber) score++;
+    if (isSpecial) score++;
+
+    var fill = document.getElementById("strengthFill");
+    var text = document.getElementById("strengthText");
+
+    if (!val) {
+        fill.style.width = "0%";
+        fill.style.backgroundColor = "#e2e8f0";
+        text.innerText = "Password Strength: Enter password";
+        text.style.color = "var(--sidebar-text)";
+    } else if (score <= 2) {
+        fill.style.width = "25%";
+        fill.style.backgroundColor = "#ef4444";
+        text.innerText = "Password Strength: Weak ⚠️";
+        text.style.color = "#ef4444";
+    } else if (score <= 4) {
+        fill.style.width = "65%";
+        fill.style.backgroundColor = "#f59e0b";
+        text.innerText = "Password Strength: Medium 🟡";
+        text.style.color = "#f59e0b";
+    } else {
+        fill.style.width = "100%";
+        fill.style.backgroundColor = "#10b981";
+        text.innerText = "Password Strength: Strong & Secure ✓";
+        text.style.color = "#10b981";
+    }
+}
+
+function toggleReqStatus(elem, isValid) {
+    if (!elem) return;
+    var icon = elem.querySelector("i");
+    if (isValid) {
+        elem.classList.add("valid");
+        if (icon) icon.className = "fas fa-check-circle";
+    } else {
+        elem.classList.remove("valid");
+        if (icon) icon.className = "fas fa-circle-notch";
+    }
+}
+
+// Delete account modal launcher
+function confirmDeleteAccount() {
+    var myModal = new bootstrap.Modal(document.getElementById('deleteAccountModal'));
+    myModal.show();
+}
+</script>
+{% endblock %}

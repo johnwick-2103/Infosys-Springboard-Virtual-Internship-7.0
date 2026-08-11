@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Create User Mark{% endblock %}
+{% block page_title %}Record User Attendance & Evaluation Mark{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, select, textarea{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'user_mark_list' %}" class="btn btn-secondary">← Back to Mark List</a>
+    </div>
+
+    <h2>Record User Mark Form</h2>
+    <br>
+
+    <form method="POST" action="{% url 'create_user_mark' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="user_id">Select User</label>
+            <select id="user_id" name="user_id" required>
+                <option value="">-- Choose User --</option>
+                {% for u in users %}
+                    <option value="{{ u.id }}">{{ u.first_name }} {{ u.last_name }} ({{ u.username }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="event">Select Event</label>
+            <select id="event" name="event_id" required>
+                {% for ev in events %}
+                    <option value="{{ ev.id }}">{{ ev.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="mark">Score / Mark (0 - 100)</label>
+            <input type="number" id="mark" name="mark" min="0" max="100" required placeholder="e.g. 95">
+        </div>
+        <div class="form-group">
+            <label for="remarks">Evaluator Remarks</label>
+            <textarea id="remarks" name="remarks" placeholder="Enter remarks or feedback"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Save User Mark</button>
+    </form>
+</div>
+{% endblock %}

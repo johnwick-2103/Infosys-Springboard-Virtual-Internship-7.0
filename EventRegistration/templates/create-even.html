@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if event %}Edit Event{% else %}Create Event{% endif %}</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            padding:20px;
+        }
+
+        .container{
+            width:800px;
+            max-width:100%;
+            background:#fff;
+            padding:35px;
+            border-radius:15px;
+            box-shadow:0 15px 35px rgba(0,0,0,0.25);
+        }
+
+        h2{
+            text-align:center;
+            color:#2c3e50;
+            margin-bottom:30px;
+            font-size:32px;
+        }
+
+        .form-group{
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+            color:#444;
+        }
+
+        input,
+        select,
+        textarea{
+            width:100%;
+            padding:12px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:16px;
+            outline:none;
+            transition:.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus{
+            border-color:#2575fc;
+            box-shadow:0 0 8px rgba(37,117,252,.3);
+        }
+
+        textarea{
+            resize:none;
+            height:120px;
+        }
+
+        .btn{
+            background:linear-gradient(90deg,#28a745,#20c997);
+            color:white;
+            border:none;
+            padding:14px 25px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:17px;
+            transition:.3s;
+            text-decoration:none;
+            display:inline-block;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(40,167,69,.4);
+        }
+
+        .btn-back{
+            background:linear-gradient(90deg,#6c757d,#495057);
+            margin-bottom:20px;
+        }
+
+        .alert{
+            padding:15px 20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            color:white;
+            font-weight:bold;
+        }
+
+        .alert-error{
+            background:#dc3545;
+        }
+
+        @media(max-width:768px){
+
+            .container{
+                padding:20px;
+            }
+
+            h2{
+                font-size:26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'dashboard' %}" class="btn btn-back">← Back to Event List</a>
+    </div>
+
+    <h2>{% if event %}Edit Event{% else %}Create Event{% endif %}</h2>
+
+    <form method="POST" action="{% if event %}{% url 'edit_event' event.id %}{% else %}{% url 'create_event' %}{% endif %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="event">Event Name</label>
+            <input type="text" id="event" name="event_name" value="{{ event.title|default:'' }}" required placeholder="Enter Event Name">
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if event.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% empty %}
+                    <option value="Technical">Technical</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Cultural">Cultural</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Workshop">Workshop</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="start">Start Date</label>
+            <input type="date" id="start" name="start_date" value="{{ event.start_date|date:'Y-m-d'|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="end">End Date</label>
+            <input type="date" id="end" name="end_date" value="{{ event.end_date|date:'Y-m-d'|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" name="venue" value="{{ event.venue|default:'' }}" required placeholder="Enter Venue">
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="Active" {% if event.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Pending" {% if event.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Completed" {% if event.status == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if event.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required placeholder="Enter Event Description">{{ event.description|default:'' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn">{% if event %}Update Event{% else %}Save & Create Event{% endif %}</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Watch List{% endblock %}
+{% block page_title %}User Event Watchlist Overview{% endblock %}
+
+{% block content %}
+<div class="table-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>{% if user.is_staff %}All Users' Watchlists{% else %}My Watchlist{% endif %}</h2>
+        <a href="{% url 'add_event_user_watch' %}" class="btn">+ Add Watch Item</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">S.No.</th>
+                {% if user.is_staff %}
+                    <th>User Name</th>
+                {% endif %}
+                <th>Event Name</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for watch in watch_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                {% if user.is_staff %}
+                    <td><strong>{{ watch.user.first_name }} {{ watch.user.last_name }} ({{ watch.user.username }})</strong></td>
+                {% endif %}
+                <td>{{ watch.event.title }}</td>
+                <td>{{ watch.event.category.name|default:"General" }}</td>
+                <td><span class="active">Saved</span></td>
+                <td>
+                    <a href="{% url 'remove_event_user_watch' watch.id %}" class="btn btn-danger" style="padding:4px 10px;font-size:12px;">Remove</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="{% if user.is_staff %}6{% else %}5{% endif %}">
+                    No watchlist items found. <a href="{% url 'add_event_user_watch' %}">Add one now!</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

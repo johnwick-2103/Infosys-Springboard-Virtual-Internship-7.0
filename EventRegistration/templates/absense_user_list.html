@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Absence User List{% endblock %}
+{% block page_title %}Absence & Non-Attendance Records{% endblock %}
+
+{% block content %}
+<div class="table-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Absence User List Table</h2>
+        <a href="{% url 'joinevent_list' %}" class="btn btn-secondary">View Joined List</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">S.No.</th>
+                <th>Participant Name</th>
+                <th>Email</th>
+                <th>Event Name</th>
+                <th>Absence Reason / Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in absent_users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><strong>{{ user.name }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.event_title }}</td>
+                <td><span class="cancelled">Absent</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No absence records found. All participants attended.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

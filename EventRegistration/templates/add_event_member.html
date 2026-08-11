@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Event Member{% endblock %}
+{% block page_title %}Add Member to Event{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, select{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'joinevent_list' %}" class="btn btn-secondary">← Back to Join List</a>
+    </div>
+
+    <h2>Add Member Registration Form</h2>
+    <br>
+
+    <form method="POST" action="{% url 'add_event_member' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="event">Select Event</label>
+            <select id="event" name="event_id" required>
+                {% for ev in events %}
+                    <option value="{{ ev.id }}">{{ ev.title }} ({{ ev.category.name|default:"General" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">Member Full Name</label>
+            <input type="text" id="name" name="full_name" required placeholder="Enter full name">
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" title="Email address must end with @gmail.com" placeholder="Enter Gmail address (e.g. user@gmail.com)">
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <div style="display: flex; gap: 10px; align-items: stretch;">
+                <select name="country_code" id="country_code" style="max-width: 120px; padding: 12px 10px; border-radius: 8px; border: 1px solid #ccc; background: white; color: black; outline: none; font-size: 15px; height: 48px;">
+                    <option value="+91" selected>+91 (IN)</option>
+                    <option value="+1">+1 (US)</option>
+                    <option value="+44">+44 (UK)</option>
+                    <option value="+61">+61 (AU)</option>
+                    <option value="+81">+81 (JP)</option>
+                    <option value="+49">+49 (DE)</option>
+                    <option value="+33">+33 (FR)</option>
+                    <option value="+65">+65 (SG)</option>
+                    <option value="+971">+971 (AE)</option>
+                </select>
+                <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" title="Mobile number must contain exactly 10 digits" minlength="10" maxlength="10" placeholder="Enter 10-digit mobile number" style="flex: 1; border-radius: 8px; border: 1px solid #ccc; padding: 12px; font-size: 15px; height: 48px; outline: none;">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Add Member</button>
+    </form>
+</div>
+{% endblock %}

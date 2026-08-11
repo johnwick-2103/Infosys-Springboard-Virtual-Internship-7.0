@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Remove Event Watch{% endblock %}
+{% block page_title %}Confirm Watchlist Removal{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width:600px;margin:0 auto;text-align:center;">
+    <i class="fas fa-heart-broken" style="font-size:60px;color:#dc3545;margin-bottom:20px;"></i>
+    <h2>Remove Event from Watchlist?</h2>
+    <p style="margin:15px 0;color:#666;font-size:16px;">
+        Watch ID: <strong>#{{ watch_id }}</strong>
+    </p>
+
+    <form method="POST" action="{% url 'remove_event_user_watch' watch_id %}">
+        {% csrf_token %}
+        <div style="display:flex;justify-content:center;gap:15px;margin-top:25px;">
+            <a href="{% url 'event_user_watch_list' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Confirm Remove</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

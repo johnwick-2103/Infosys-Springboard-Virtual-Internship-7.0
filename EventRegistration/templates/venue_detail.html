@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}{{ venue.name }} - Venue Details{% endblock %}
+{% block page_title %}Venue Details{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);overflow:hidden;">
+      <div style="height:220px;background:linear-gradient(135deg,#3b82f6,#6366f1);position:relative;">
+        {% if venue.image %}<img src="{{ venue.image.url }}" style="width:100%;height:100%;object-fit:cover;" alt="{{ venue.name }}">
+        {% else %}<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:64px;color:rgba(255,255,255,0.4);"><i class="fas fa-building"></i></div>{% endif %}
+        <span class="badge position-absolute top-0 end-0 m-3 fs-6
+          {% if venue.status == 'Available' %}bg-success{% elif venue.status == 'Booked' %}bg-primary{% elif venue.status == 'Under Maintenance' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ venue.status }}</span>
+      </div>
+      <div class="p-4">
+        <h4 class="fw-bold mb-1">{{ venue.name }}</h4>
+        <p class="text-muted small"><i class="fas fa-map-marker-alt me-1"></i>{{ venue.location }}</p>
+        {% if venue.address %}<p class="text-muted small"><i class="fas fa-home me-1"></i>{{ venue.address }}</p>{% endif %}
+        <hr>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="fas fa-users text-primary"></i>
+          <span class="fw-bold">Capacity: {{ venue.capacity }} persons</span>
+        </div>
+        {% if venue.contact_person %}<div class="d-flex align-items-center gap-2 mb-2"><i class="fas fa-user text-success"></i><span>{{ venue.contact_person }}</span></div>{% endif %}
+        {% if venue.phone %}<div class="d-flex align-items-center gap-2 mb-2"><i class="fas fa-phone text-warning"></i><a href="tel:{{ venue.phone }}">{{ venue.phone }}</a></div>{% endif %}
+        {% if venue.email %}<div class="d-flex align-items-center gap-2 mb-2"><i class="fas fa-envelope text-info"></i><a href="mailto:{{ venue.email }}">{{ venue.email }}</a></div>{% endif %}
+        {% if venue.available_date %}<div class="d-flex align-items-center gap-2 mb-2"><i class="fas fa-calendar text-purple" style="color:#8b5cf6;"></i><span>Available: {{ venue.available_date }}</span></div>{% endif %}
+        {% if user.is_staff %}
+        <div class="d-flex gap-2 mt-3">
+          <a href="{% url 'venue_edit' venue.id %}" class="btn btn-warning btn-sm rounded-pill flex-fill fw-bold"><i class="fas fa-edit me-1"></i>Edit</a>
+          <a href="{% url 'venue_delete' venue.id %}" class="btn btn-danger btn-sm rounded-pill flex-fill fw-bold"><i class="fas fa-trash me-1"></i>Delete</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="card p-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+      <h5 class="fw-bold mb-3"><i class="fas fa-calendar-alt text-primary me-2"></i>Events at This Venue</h5>
+      {% if events %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead style="background:var(--table-header-bg);">
+            <tr>
+              <th>Event</th><th>Category</th><th>Start Date</th><th>Status</th><th>Participants</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for ev in events %}
+          <tr>
+            <td><a href="{% url 'event_detail' ev.id %}" class="fw-bold text-decoration-none">{{ ev.title }}</a></td>
+            <td>{{ ev.category.name|default:"—" }}</td>
+            <td>{{ ev.start_date }}</td>
+            <td><span class="badge {% if ev.status == 'Active' %}bg-success{% elif ev.status == 'Completed' %}bg-primary{% elif ev.status == 'Pending' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ ev.status }}</span></td>
+            <td>{{ ev.registrations.count }}/{{ ev.max_participants }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-4"><i class="fas fa-calendar-times fa-3x text-muted mb-2 d-block"></i><p class="text-muted">No events assigned to this venue yet.</p></div>
+      {% endif %}
+    </div>
+    <div class="mt-3">
+      <a href="{% url 'venue_list' %}" class="btn btn-outline-secondary rounded-pill px-4"><i class="fas fa-arrow-left me-2"></i>Back to Venues</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

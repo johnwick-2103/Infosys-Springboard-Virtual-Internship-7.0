@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block title %}Analytics &amp; Intelligence - EMS{% endblock %}
+{% block page_title %}Analytics &amp; Performance Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+.analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.chart-box { background: var(--content-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; }
+@media(max-width: 992px) { .analytics-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-chart-line text-primary me-2"></i>Portal Performance Analytics</h5>
+    <p class="text-muted small mb-0">Visual data analytics across events, category distribution, member departments, and attendance rates.</p>
+  </div>
+</div>
+
+<!-- Top KPI Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <div class="text-muted small fw-bold uppercase">Total Events</div>
+      <h3 class="fw-bold text-primary mt-1 mb-0">{{ total_events }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <div class="text-muted small fw-bold uppercase">Total Registrations</div>
+      <h3 class="fw-bold text-success mt-1 mb-0">{{ total_members }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <div class="text-muted small fw-bold uppercase">Attendance Rate</div>
+      <h3 class="fw-bold text-info mt-1 mb-0">{{ attendance_rate }}%</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <div class="text-muted small fw-bold uppercase">Budget Balance</div>
+      <h3 class="fw-bold {% if budget_remaining < 0 %}text-danger{% else %}text-warning{% endif %} mt-1 mb-0">₹{{ budget_remaining|floatformat:2 }}</h3>
+    </div>
+  </div>
+</div>
+
+<div class="analytics-grid">
+  <!-- Chart 1: Monthly Event Velocity -->
+  <div class="chart-box">
+    <h6 class="fw-bold mb-3"><i class="fas fa-calendar-alt text-primary me-2"></i>Monthly Event Distribution</h6>
+    <div style="height: 260px;"><canvas id="monthlyChart"></canvas></div>
+  </div>
+
+  <!-- Chart 2: Events by Category -->
+  <div class="chart-box">
+    <h6 class="fw-bold mb-3"><i class="fas fa-pie-chart text-success me-2"></i>Events by Category</h6>
+    <div style="height: 260px;"><canvas id="categoryChart"></canvas></div>
+  </div>
+
+  <!-- Chart 3: Members by Department -->
+  <div class="chart-box">
+    <h6 class="fw-bold mb-3"><i class="fas fa-users text-info me-2"></i>Members by Department</h6>
+    <div style="height: 260px;"><canvas id="deptChart"></canvas></div>
+  </div>
+
+  <!-- Chart 4: Venue Utilization -->
+  <div class="chart-box">
+    <h6 class="fw-bold mb-3"><i class="fas fa-building text-warning me-2"></i>Top Venue Utilization</h6>
+    <div style="height: 260px;"><canvas id="venueChart"></canvas></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Monthly Chart
+    new Chart(document.getElementById("monthlyChart"), {
+        type: 'line',
+        data: {
+            labels: {{ month_labels_json|safe }},
+            datasets: [{
+                label: 'Events Created',
+                data: {{ month_data_json|safe }},
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 2. Category Chart
+    new Chart(document.getElementById("categoryChart"), {
+        type: 'doughnut',
+        data: {
+            labels: {{ cat_labels_json|safe }},
+            datasets: [{
+                data: {{ cat_data_json|safe }},
+                backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4']
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 3. Dept Chart
+    new Chart(document.getElementById("deptChart"), {
+        type: 'bar',
+        data: {
+            labels: {{ dept_labels_json|safe }},
+            datasets: [{
+                label: 'Members',
+                data: {{ dept_data_json|safe }},
+                backgroundColor: '#10b981'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // 4. Venue Chart
+    new Chart(document.getElementById("venueChart"), {
+        type: 'bar',
+        data: {
+            labels: {{ venue_labels_json|safe }},
+            datasets: [{
+                label: 'Events Hosted',
+                data: {{ venue_data_json|safe }},
+                backgroundColor: '#f59e0b'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+});
+</script>
+{% endblock %}

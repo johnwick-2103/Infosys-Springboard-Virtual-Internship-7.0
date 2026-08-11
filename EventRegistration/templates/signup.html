@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User Account - Event Management System</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-color: #f8fafc;
+            --accent-color: #6366f1;
+            --accent-gradient: linear-gradient(135deg, #4f46e5, #6366f1);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --input-bg: #1e293b;
+            --input-border: #475569;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%);
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 650px;
+            perspective: 1000px;
+        }
+
+        .signup-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--accent-gradient);
+            font-size: 22px;
+            color: white;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .signup-box h2 {
+            text-align: center;
+            margin-bottom: 6px;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .signup-box p.subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / 3;
+        }
+
+        .form-group {
+            text-align: left;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 13px;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: #64748b;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper input, .input-wrapper select {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            font-size: 14px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+            background: #0f172a;
+        }
+
+        .input-wrapper input:focus + i, .input-wrapper select:focus + i {
+            color: var(--accent-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            height: 46px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .login-link a {
+            color: #818cf8;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-link a:hover {
+            color: #a5b4fc;
+            text-decoration: underline;
+        }
+
+        .alert-wrapper {
+            grid-column: 1 / 3;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        @media(max-width: 768px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: 1;
+            }
+            .alert-wrapper {
+                grid-column: 1;
+            }
+            .signup-box {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container animate__animated animate__fadeInUp">
+        <div class="signup-box">
+            <div class="logo-area">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Create Account</h2>
+            <p class="subtitle">Join as a participant to discover and register for events</p>
+
+            {% if messages %}
+                <div class="alert-wrapper">
+                    {% for message in messages %}
+                        <div class="alert-error animate__animated animate__shakeX">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'signup' %}">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" required minlength="3" placeholder="e.g. johndoe">
+                        <i class="fas fa-at"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" required minlength="6" placeholder="At least 6 characters">
+                        <i class="fas fa-key"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" name="name" required minlength="3" placeholder="e.g. John Doe">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" required pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" title="Email address must end with @gmail.com" placeholder="e.g. john@gmail.com">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <div class="input-wrapper" style="gap: 10px; display: flex; align-items: stretch; position: relative;">
+                        <select name="country_code" id="country_code" style="max-width: 120px; padding: 12px 10px; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: white; outline: none; font-size: 14px; height: 48px;">
+                            <option value="+91" style="color: black;" selected>+91 (IN)</option>
+                            <option value="+1" style="color: black;">+1 (US)</option>
+                            <option value="+44" style="color: black;">+44 (UK)</option>
+                            <option value="+61" style="color: black;">+61 (AU)</option>
+                            <option value="+81" style="color: black;">+81 (JP)</option>
+                            <option value="+49" style="color: black;">+49 (DE)</option>
+                            <option value="+33" style="color: black;">+33 (FR)</option>
+                            <option value="+65" style="color: black;">+65 (SG)</option>
+                            <option value="+971" style="color: black;">+971 (AE)</option>
+                        </select>
+                        <div style="position: relative; flex: 1;">
+                            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10}" title="Mobile number must contain exactly 10 digits" minlength="10" maxlength="10" placeholder="e.g. 9876543210" style="padding-left: 42px; width: 100%; border-radius: 12px; border: 1px solid var(--input-border); background: var(--input-bg); color: white; outline: none; font-size: 14px; height: 48px;">
+                            <i class="fas fa-phone" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 15px;"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="event">Select Event to Join (Optional)</label>
+                    <div class="input-wrapper">
+                        <select id="event" name="event_id" style="padding-left: 42px;">
+                            <option value="">-- Don't join an event yet --</option>
+                            {% for ev in events %}
+                                <option value="{{ ev.id }}">{{ ev.title }} ({{ ev.category.name|default:"General" }})</option>
+                            {% empty %}
+                                <option value="">No active events available</option>
+                            {% endfor %}
+                        </select>
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+
+                <div class="full-width">
+                    <button type="submit" class="btn-submit">
+                        <span>Create Account & Sign In</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div class="login-link">
+                <p>Already have an account? <a href="{% url 'login' %}">Sign In here</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

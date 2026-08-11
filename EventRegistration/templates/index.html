@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventure - Modern Event Management System</title>
+    
+    <!-- CDNs -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #4f46e5, #6366f1);
+            --accent: #38bdf8;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Hero styling with animated gradient overlay */
+        .hero-section {
+            position: relative;
+            padding: 160px 0 100px 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        /* Animated background particles */
+        .bg-dots {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #93c5fd, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+            color: white;
+        }
+
+        .btn-outline-white {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 28px;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border-color: #cbd5e1;
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Statistics styling */
+        .stat-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        /* Gallery and Event cards */
+        .event-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .event-banner {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(5px);
+            color: white;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        /* Floating header navigation */
+        .navbar-custom {
+            background: rgba(15, 23, 42, 0.9) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Testimonial slider */
+        .testimonial-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            height: 100%;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Newsletter Subscription */
+        .newsletter-section {
+            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+            color: white;
+            border-radius: 24px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 10% 90%, rgba(56, 189, 248, 0.2) 0%, transparent 60%);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top py-3 animate__animated animate__fadeInDown">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" href="#">
+                <i class="fas fa-calendar-alt text-primary"></i> Eventure
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-2">
+                    <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#gallery">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-light rounded-pill px-4" href="{% url 'login' %}">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-gradient rounded-pill px-4" href="{% url 'signup' %}">Sign Up</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="bg-dots"></div>
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 text-center text-lg-start animate__animated animate__fadeInLeft">
+                    <span class="badge bg-primary px-3 py-2 rounded-pill mb-3">SaaS Event Management Platform</span>
+                    <h1 class="hero-title mb-4">Empower Your Events, Elevate Your Experience</h1>
+                    <p class="lead text-white-50 mb-5" style="font-size: 1.15rem; line-height: 1.7;">
+                        The ultimate event coordination ecosystem. Plan categories, coordinate attendee watchlists, grade evaluations, and access real-time statistics in a unified SaaS interface.
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
+                        <a href="{% url 'login' %}" class="btn btn-gradient px-4 py-3"><i class="fas fa-rocket me-2"></i>Explore Events</a>
+                        <a href="#contact" class="btn btn-outline-white px-4 py-3"><i class="fas fa-phone-alt me-2"></i>Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center animate__animated animate__fadeInRight">
+                    <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop" 
+                         alt="EMS Hero Banner" 
+                         class="img-fluid rounded-4 shadow-lg border border-secondary" 
+                         style="border-color: rgba(255,255,255,0.1) !important; max-height: 450px; object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Statistics Section -->
+    <section class="py-5" style="margin-top: -50px; position: relative; z-index: 10;">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-3 col-sm-6 animate__animated animate__fadeInUp">
+                    <div class="stat-card border border-light-subtle">
+                        <div class="stat-number count-up" data-target="{{ total_events }}">0</div>
+                        <h6 class="text-muted fw-bold uppercase fs-7">Total Events</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="stat-card border border-light-subtle">
+                        <div class="stat-number count-up" data-target="{{ completed_events }}">0</div>
+                        <h6 class="text-muted fw-bold uppercase fs-7">Completed Events</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="stat-card border border-light-subtle">
+                        <div class="stat-number count-up" data-target="{{ total_users }}">0</div>
+                        <h6 class="text-muted fw-bold uppercase fs-7">Total Users</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
+                    <div class="stat-card border border-light-subtle">
+                        <div class="stat-number count-up" data-target="{{ categories_count }}">0</div>
+                        <h6 class="text-muted fw-bold uppercase fs-7">Categories</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-600 mx-auto">
+                <span class="text-primary fw-bold text-uppercase fs-7">Powerful Utility</span>
+                <h2 class="fw-bold mt-2">Core Platform Capabilities</h2>
+                <p class="text-muted">Explore the functional advantages that make our Event Management System unique.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
+                        <h5 class="fw-bold mb-3">Category Classification</h5>
+                        <p class="text-muted mb-0">Organize events under structured categories for straightforward browsing, searching, and filtering workflows.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="icon-box"><i class="fas fa-heart"></i></div>
+                        <h5 class="fw-bold mb-3">Watchlist Tracking</h5>
+                        <p class="text-muted mb-0">Allow users to bookmark upcoming events in a custom watch list, ensuring they never miss key registrations.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card h-100">
+                        <div class="icon-box"><i class="fas fa-star"></i></div>
+                        <h5 class="fw-bold mb-3">Performance Evaluation</h5>
+                        <p class="text-muted mb-0">Track attendee participation and record custom grades and remarks directly inside the admin panel.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Gallery Section -->
+    <section id="gallery" class="py-5 bg-white border-top border-bottom border-light-subtle">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-600 mx-auto">
+                <span class="text-primary fw-bold text-uppercase fs-7">Active Events</span>
+                <h2 class="fw-bold mt-2">Discover Happening Events</h2>
+                <p class="text-muted">Take a look at the active list of scheduled conferences, webinars, and meetups.</p>
+            </div>
+
+            <div class="row g-4">
+                {% for event in active_events %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="event-card h-100">
+                        <div class="event-banner" style="background-image: url('{% if 'hackathon' in event.title|lower %}https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=600&auto=format&fit=crop{% elif 'techfest' in event.title|lower or 'tech fest' in event.title|lower %}https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=600&auto=format&fit=crop{% elif event.category.name|lower == 'technical' %}https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=600&auto=format&fit=crop{% elif event.category.name|lower == 'sports' %}https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=600&auto=format&fit=crop{% elif event.category.name|lower == 'cultural' %}https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop{% elif event.category.name|lower == 'workshop' %}https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=600&auto=format&fit=crop{% else %}https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=600&auto=format&fit=crop{% endif %}');">
+                            <span class="category-badge">{{ event.category.name|default:"General" }}</span>
+                        </div>
+                        <div class="p-4">
+                            <h5 class="fw-bold mb-2 text-dark">{{ event.title }}</h5>
+                            <p class="text-muted mb-3 fs-7" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 38px;">
+                                {{ event.description }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3 text-muted fs-7">
+                                <span><i class="fas fa-map-marker-alt text-primary me-1"></i> {{ event.venue }}</span>
+                                <span><i class="fas fa-calendar-alt text-primary me-1"></i> {{ event.start_date|date:"d M Y" }}</span>
+                            </div>
+                            <div class="mt-4">
+                                <a href="{% url 'login' %}" class="btn btn-primary w-100 rounded-pill">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">No active events found. Sign in as admin to create one!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-600 mx-auto">
+                <span class="text-primary fw-bold text-uppercase fs-7">Testimonials</span>
+                <h2 class="fw-bold mt-2">What Attendees Say</h2>
+                <p class="text-muted">Check out user reviews and feedback from previous event participants.</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="text-muted mb-4" style="font-style: italic;">
+                            "The watchlist feature changed how I coordinate college events. I'm updated instantly and can manage my schedules easily."
+                        </p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Sarah+Jenkins&background=4f46e5&color=fff" alt="Avatar" class="avatar">
+                            <div>
+                                <h6 class="fw-bold mb-0">Sarah Jenkins</h6>
+                                <small class="text-muted">Computer Science Student</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="text-muted mb-4" style="font-style: italic;">
+                            "Managing marks and attendee remarks used to take hours. With the Eventure grading panel, it takes minutes. Highly recommended!"
+                        </p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Prof.+Karan&background=059669&color=fff" alt="Avatar" class="avatar">
+                            <div>
+                                <h6 class="fw-bold mb-0">Prof. Karan Mehta</h6>
+                                <small class="text-muted">Internship Mentor</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="text-muted mb-4" style="font-style: italic;">
+                            "The light/dark mode layouts are exceptionally designed. Transitions are smooth and the responsive sidebar works flawlessly on mobile."
+                        </p>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://ui-avatars.com/api/?name=Arjun+Sharma&background=d97706&color=fff" alt="Avatar" class="avatar">
+                            <div>
+                                <h6 class="fw-bold mb-0">Arjun Sharma</h6>
+                                <small class="text-muted">Virtual Intern</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Accordion FAQ Section -->
+    <section id="faq" class="py-5 bg-white border-top border-bottom border-light-subtle">
+        <div class="container py-5">
+            <div class="text-center mb-5 max-width-600 mx-auto">
+                <span class="text-primary fw-bold text-uppercase fs-7">FAQs</span>
+                <h2 class="fw-bold mt-2">Frequently Asked Questions</h2>
+                <p class="text-muted">Quick answers to common questions about the Event Management System.</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        <div class="accordion-item border-bottom py-2">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed fw-bold text-dark fs-6" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    How do I register for an event?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Simply sign up or login, navigate to the browse events list, click 'Register' on your desired event, and fill in your registration details.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-bottom py-2">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed fw-bold text-dark fs-6" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    Can I watch multiple events at once?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Yes! You can add as many events to your custom watchlist as you like by clicking the watchlist button next to any event.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item border-bottom py-2">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed fw-bold text-dark fs-6" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    Who assigns grades or evaluations?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Evaluations, grades, and custom remarks are recorded by system administrators (staff members) in the admin portal once an event completes.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter & Subscription Section -->
+    <section class="container py-5 my-5">
+        <div class="newsletter-section shadow-lg">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-6">
+                    <h3 class="fw-bold mb-2">Subscribe to our newsletter</h3>
+                    <p class="mb-0 text-white-50">Get the latest updates, event details, and category additions delivered straight to your inbox.</p>
+                </div>
+                <div class="col-lg-6">
+                    <form class="d-flex flex-column flex-sm-row gap-3">
+                        <input type="email" class="form-control rounded-pill px-4 py-3" placeholder="Enter your email address" required style="border: none;">
+                        <button type="submit" class="btn btn-dark rounded-pill px-4 py-3">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Embedded Map & Contact Card Section -->
+    <section id="contact" class="py-5 bg-white border-top border-light-subtle">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <h3 class="fw-bold mb-4">Get in Touch</h3>
+                    <p class="text-muted mb-4">Have questions about our event ecosystem or require custom features? Drop us a message.</p>
+                    
+                    <form method="POST" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Name</label>
+                            <input type="text" name="name" class="form-control rounded-pill px-3 py-2 border-secondary-subtle" required placeholder="Your name">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="email" class="form-control rounded-pill px-3 py-2 border-secondary-subtle" required placeholder="Your email">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Subject</label>
+                            <input type="text" name="subject" class="form-control rounded-pill px-3 py-2 border-secondary-subtle" required placeholder="Subject">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Message</label>
+                            <textarea name="message" class="form-control rounded-3 px-3 py-2 border-secondary-subtle" rows="4" required placeholder="Type your message here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-gradient w-100 rounded-pill py-2 fw-bold">Send Message</button>
+                    </form>
+                </div>
+                
+                <div class="col-md-6 d-flex flex-column justify-content-between">
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3"><i class="fas fa-map-marked-alt text-primary me-2"></i>Our Headquarters</h5>
+                        <!-- Standard embedded map placeholder -->
+                        <div class="rounded-4 overflow-hidden border border-secondary-subtle" style="height: 300px;">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.4278457002047!2d-73.98748368459383!3d40.751680979328224!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1625624734891!5m2!1sen!2sus" 
+                                    width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-3 fs-7 text-muted">
+                        <div class="col-sm-6"><i class="fas fa-envelope text-primary me-1"></i> info@eventmanagement.com</div>
+                        <div class="col-sm-6"><i class="fas fa-phone text-primary me-1"></i> +1 (555) 019-2834</div>
+                        <div class="col-12"><i class="fas fa-clock text-primary me-1"></i> Weekdays: 9:00 AM - 6:00 PM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark text-white border-top border-secondary text-center">
+        <div class="container">
+            <p class="mb-2">© 2026 EventPro Event Management System.</p>
+            <p class="text-white-50 mb-0" style="font-size: 0.85rem;">EventPro Project</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Count-up animation for counters
+        document.addEventListener("DOMContentLoaded", function() {
+            const counters = document.querySelectorAll('.count-up');
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const speed = 100; // lower number = faster
+                
+                const updateCount = () => {
+                    const count = +counter.innerText;
+                    const inc = Math.max(1, Math.ceil(target / speed));
+                    
+                    if (count < target) {
+                        counter.innerText = count + inc;
+                        setTimeout(updateCount, 15);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        });
+    </script>
+</body>
+</html>

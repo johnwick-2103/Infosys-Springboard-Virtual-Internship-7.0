@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Completed Events{% endblock %}
+{% block page_title %}Completed Events History{% endblock %}
+
+{% block content %}
+<div class="table-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Completed Events List</h2>
+        <a href="{% url 'complete_event_user_list' %}" class="btn btn-secondary">View Participant History</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">S.No.</th>
+                <th>Event Name</th>
+                <th>Category</th>
+                <th>Completed Date</th>
+                <th>Venue</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><strong>{{ event.title }}</strong></td>
+                <td>{{ event.category.name|default:"General" }}</td>
+                <td>{{ event.end_date|date:"d-m-Y" }}</td>
+                <td>{{ event.venue }}</td>
+                <td><span class="completed">Completed</span></td>
+                <td>
+                    <a href="{% url 'event_detail' event.id %}" class="btn btn-secondary" style="padding:4px 10px;font-size:12px;">View Report</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No completed events yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

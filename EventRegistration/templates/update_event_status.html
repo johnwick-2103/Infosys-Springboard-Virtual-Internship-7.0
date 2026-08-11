@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Event Status{% endblock %}
+{% block page_title %}Update Status for Event #{{ event.id }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+select{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:16px; outline:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width:600px;margin:0 auto;">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'event_list' %}" class="btn btn-secondary">← Back to Event List</a>
+    </div>
+
+    <h2>Update Status: {{ event.title }}</h2>
+    <p style="margin:10px 0 25px;color:#666;">Current Status: <strong>{{ event.status }}</strong></p>
+
+    <form method="POST" action="{% url 'update_event_status' event.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="status">Select New Status</label>
+            <select id="status" name="status" required>
+                <option value="Active" {% if event.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Pending" {% if event.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Completed" {% if event.status == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if event.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success" style="width:100%;">Update Status</button>
+    </form>
+</div>
+{% endblock %}

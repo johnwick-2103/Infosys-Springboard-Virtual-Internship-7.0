@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Notification Center - EMS{% endblock %}
+{% block page_title %}Notification Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-bell text-warning me-2"></i>Notifications {% if unread_count %}<span class="badge bg-danger rounded-pill">{{ unread_count }} new</span>{% endif %}</h5>
+    <p class="text-muted small mb-0">System alerts, event updates, and member notifications.</p>
+  </div>
+  {% if notifications %}
+  <div class="d-flex gap-2">
+    {% if unread_count %}
+    <a href="{% url 'notification_mark_all_read' %}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+      <i class="fas fa-check-double me-1"></i>Mark All Read
+    </a>
+    {% endif %}
+    <a href="{% url 'notification_clear_all' %}" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Clear all notifications?');">
+      <i class="fas fa-trash-alt me-1"></i>Clear All
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+{% if notifications %}
+<div class="list-group" style="background:var(--content-bg);border-radius:18px;border:1px solid var(--border-color);overflow:hidden;">
+  {% for n in notifications %}
+  <div class="list-group-item list-group-item-action d-flex align-items-center justify-content-between p-3 {% if not n.is_read %}bg-light{% endif %}" style="border-bottom:1px solid var(--border-color);">
+    <div class="d-flex align-items-center gap-3">
+      <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;" class="
+        {% if n.category == 'event' %}bg-primary
+        {% elif n.category == 'reminder' %}bg-warning
+        {% elif n.category == 'member' %}bg-info
+        {% elif n.category == 'budget' %}bg-danger
+        {% else %}bg-secondary{% endif %}">
+        <i class="fas {% if n.category == 'event' %}fa-calendar-plus{% elif n.category == 'reminder' %}fa-clock{% elif n.category == 'member' %}fa-user-plus{% elif n.category == 'budget' %}fa-wallet{% else %}fa-bell{% endif %}"></i>
+      </div>
+      <div>
+        <p class="mb-0 fw-semibold text-dark">{{ n.message }}</p>
+        <small class="text-muted"><i class="far fa-clock me-1"></i>{{ n.created_at|date:"d M Y, h:i A" }}</small>
+      </div>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      {% if n.link %}
+      <a href="{{ n.link }}" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="fas fa-arrow-right me-1"></i>View</a>
+      {% endif %}
+      <a href="{% url 'notification_mark_read' n.id %}" class="btn btn-sm btn-light rounded-circle" title="Mark as read"><i class="fas fa-check text-success"></i></a>
+      <a href="{% url 'notification_delete' n.id %}" class="btn btn-sm btn-light rounded-circle" title="Delete" onclick="return confirm('Delete this notification?');"><i class="fas fa-trash text-danger"></i></a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}
+    {% for num in page_obj.paginator.page_range %}<li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>{% endfor %}
+    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="text-center py-5" style="background:var(--content-bg);border-radius:18px;border:2px dashed var(--border-color);">
+  <i class="fas fa-bell-slash fa-4x text-muted mb-3 d-block"></i>
+  <h5 class="text-muted">No Notifications</h5>
+  <p class="text-muted small">You are all caught up!</p>
+</div>
+{% endif %}
+{% endblock %}

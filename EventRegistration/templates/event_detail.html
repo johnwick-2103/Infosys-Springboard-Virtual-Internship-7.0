@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Detail - {{ event.title }}{% endblock %}
+{% block page_title %}Event Information Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-banner {
+        height: 250px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 16px;
+        display: flex;
+        align-items: flex-end;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border: 1px solid var(--border-color);
+    }
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+    }
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 8px;
+        background: var(--body-bg);
+        border: 1px solid var(--border-color);
+    }
+    .info-item i {
+        font-size: 20px;
+        color: var(--primary-color);
+    }
+
+    @media(max-width: 992px) {
+        .detail-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2 animate__animated animate__fadeIn">
+    <!-- Action controls at top -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'event_list' %}" class="btn btn-secondary btn-sm rounded-pill"><i class="fas fa-arrow-left"></i> Back to Events</a>
+        {% if user.is_staff %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'edit_event' event.id %}" class="btn btn-sm rounded-pill"><i class="fas fa-edit"></i> Edit Event</a>
+                <a href="{% url 'update_event_status' event.id %}" class="btn btn-secondary btn-sm rounded-pill"><i class="fas fa-exchange-alt"></i> Update Status</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Event Hero Banner -->
+    <div class="detail-banner" style="background-image: linear-gradient(rgba(15,23,42,0.4), rgba(15,23,42,0.7)), url('{% if 'hackathon' in event.title|lower %}https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=800&auto=format&fit=crop{% elif 'techfest' in event.title|lower or 'tech fest' in event.title|lower %}https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop{% elif event.category.name|lower == 'technical' %}https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop{% elif event.category.name|lower == 'sports' %}https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=800&auto=format&fit=crop{% elif event.category.name|lower == 'cultural' %}https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=800&auto=format&fit=crop{% elif event.category.name|lower == 'workshop' %}https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop{% else %}https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=800&auto=format&fit=crop{% endif %}');">
+        <div>
+            <span class="badge bg-primary px-3 py-2 rounded-pill mb-2 fs-8">{{ event.category.name|default:"General" }}</span>
+            <h1 class="text-white fw-bold mb-2 fs-2">{{ event.title }}</h1>
+            <p class="text-white-50 mb-0"><i class="fas fa-map-marker-alt text-primary me-1"></i> {{ event.venue }} | <i class="fas fa-calendar-alt text-primary me-1"></i> {{ event.start_date|date:"d M Y" }}</p>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <!-- Left: Description and Attending Members List -->
+        <div class="d-flex flex-column gap-4">
+            <!-- Description Card -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3 text-secondary"><i class="fas fa-align-left text-primary me-2"></i>Event Description</h5>
+                <p class="text-muted" style="line-height: 1.8; font-size: 1.02rem;">{{ event.description }}</p>
+            </div>
+
+            <!-- Schedule Timeline -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-3 text-secondary"><i class="fas fa-stream text-primary me-2"></i>Event Schedule</h5>
+                <div class="timeline ps-3 border-start border-primary border-2 mt-4 ms-2" style="position: relative;">
+                    <div class="mb-4" style="position: relative;">
+                        <span class="badge bg-secondary mb-2">Start Time (10:00 AM)</span>
+                        <h6 class="fw-bold text-dark mb-1">Keynote & Introductory Address</h6>
+                        <p class="text-muted small">Opening addresses and event overview outline.</p>
+                    </div>
+                    <div class="mb-4" style="position: relative;">
+                        <span class="badge bg-secondary mb-2">Midday Session (11:30 AM)</span>
+                        <h6 class="fw-bold text-dark mb-1">Speaker Presentation & Q&A</h6>
+                        <p class="text-muted small">Primary presentation session followed by interactive panel queries.</p>
+                    </div>
+                    <div style="position: relative;">
+                        <span class="badge bg-secondary mb-2">Conclusion Time (1:00 PM)</span>
+                        <h6 class="fw-bold text-dark mb-1">Certification & Grading Logs</h6>
+                        <p class="text-muted small">Attendee markings, wrap-up feedback, and token distributions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendees list -->
+            <div class="table-box">
+                <h5 class="fw-bold mb-3 text-secondary"><i class="fas fa-users text-primary me-2"></i>Registered Participants</h5>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px;">S.No.</th>
+                                <th>Participant Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reg in event.registrations.all %}
+                            <tr>
+                                <td class="fw-bold">{{ forloop.counter }}</td>
+                                <td class="fw-semibold">{{ reg.full_name }}</td>
+                                <td>{{ reg.email }}</td>
+                                <td>{{ reg.phone }}</td>
+                                <td>{{ reg.registration_date|date:"d-m-Y H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center text-muted py-4">No participants registered yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Actions and Metadata Dashboard -->
+        <div class="d-flex flex-column gap-4">
+            <!-- Event Metrics Card -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4 text-secondary"><i class="fas fa-info-circle text-primary me-2"></i>Metadata Panel</h5>
+                
+                <div class="d-flex flex-column gap-3">
+                    <div class="info-item">
+                        <i class="fas fa-exchange-alt text-warning"></i>
+                        <div>
+                            <div class="small text-muted">Registration Status</div>
+                            <span class="fw-bold">
+                                {% if event.status == 'Active' %}<span class="text-success">Active</span>
+                                {% elif event.status == 'Completed' %}<span class="text-primary">Completed</span>
+                                {% else %}<span class="text-warning">{{ event.status }}</span>{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-user-tie"></i>
+                        <div>
+                            <div class="small text-muted">Organizer</div>
+                            <span class="fw-bold text-dark">Department Admin</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-chair text-danger"></i>
+                        <div>
+                            <div class="small text-muted">Seat Limit</div>
+                            {% if event.limit_participants %}
+                                <span class="fw-bold text-dark">{{ event.seats_remaining }} / {{ event.max_participants }} seats left</span>
+                            {% else %}
+                                <span class="fw-bold text-success">Unlimited</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-times"></i>
+                        <div>
+                            <div class="small text-muted">Deadline (Simulated)</div>
+                            <span class="fw-bold text-dark">{{ event.start_date|date:"d M Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Context Actions -->
+            {% if not user.is_staff %}
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-3 text-secondary"><i class="fas fa-rocket text-primary me-2"></i>Quick Actions</h5>
+                    <div class="d-flex flex-column gap-2">
+                        {% if event.id in registered_event_ids %}
+                            <button class="btn btn-success w-100 rounded-pill" disabled><i class="fas fa-check-circle"></i> Already Registered</button>
+                        {% else %}
+                            {% if event.status == 'Active' %}
+                                {% if event.limit_participants and event.is_full %}
+                                    <button class="btn btn-secondary w-100 rounded-pill" disabled><i class="fas fa-ban"></i> Event Full (Limit {{ event.max_participants }})</button>
+                                {% else %}
+                                    <form action="{% url 'add_event_member' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="event_id" value="{{ event.id }}">
+                                        <input type="hidden" name="full_name" value="{{ user.first_name }} {{ user.last_name }}">
+                                        <input type="hidden" name="email" value="{{ user.email }}">
+                                        <input type="hidden" name="phone" value="{{ user.profile.phone|default:'' }}">
+                                        <button type="submit" class="btn btn-success w-100 rounded-pill"><i class="fas fa-user-plus"></i> Register for Event</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+
+                        {% if event.id in watched_event_ids %}
+                            <button class="btn btn-outline-info w-100 rounded-pill" disabled><i class="fas fa-eye"></i> Watching Event</button>
+                        {% else %}
+                            <a href="{% url 'add_watchlist_direct' event.id %}" class="btn btn-secondary w-100 rounded-pill" style="background:#fbbf24; border-color:#fbbf24; color:#0f172a;"><i class="fas fa-heart"></i> Add to Watchlist</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

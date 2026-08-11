@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Event Categories{% endblock %}
+{% block page_title %}Event Categories Overview{% endblock %}
+
+{% block content %}
+<div class="table-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Event Category List</h2>
+        <a href="{% url 'create_event_category' %}" class="btn">+ Create Category</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">S.No.</th>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat in categories %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><strong>{{ cat.name }}</strong></td>
+                <td>{{ cat.description|default:"No description" }}</td>
+                <td>{{ cat.created_at|date:"d-m-Y" }}</td>
+                <td>
+                    <a href="{% url 'edit_event_category' cat.id %}" class="btn" style="padding:4px 10px;font-size:12px;background:linear-gradient(90deg,#36d1dc,#5b86e5);">Edit</a>
+                    <a href="{% url 'event_category_delete' cat.id %}" class="btn btn-danger" style="padding:4px 10px;font-size:12px;">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No categories found. <a href="{% url 'create_event_category' %}">Create one!</a></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

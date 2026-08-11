@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event List</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background:linear-gradient(135deg,#667eea,#764ba2,#6dd5fa);
+            padding:30px;
+        }
+
+        .table-box{
+            width:1100px;
+            max-width:100%;
+            background:#ffffff;
+            padding:30px;
+            border-radius:20px;
+            box-shadow:0 20px 40px rgba(0,0,0,0.25);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+            font-size:32px;
+            color:#2c3e50;
+            letter-spacing:1px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            overflow:hidden;
+            border-radius:12px;
+        }
+
+        th{
+            background:linear-gradient(90deg,#36d1dc,#5b86e5);
+            color:white;
+            padding:15px;
+            font-size:17px;
+        }
+
+        td{
+            padding:14px;
+            text-align:center;
+            color:#444;
+            border-bottom:1px solid #e5e5e5;
+        }
+
+        tr:nth-child(even){
+            background:#f8fbff;
+        }
+
+        tr:hover{
+            background:#e6f4ff;
+            transition:.3s;
+        }
+
+        .active{
+            display:inline-block;
+            background:#d4edda;
+            color:#28a745;
+            padding:6px 15px;
+            border-radius:25px;
+            font-weight:bold;
+        }
+
+        .completed{
+            display:inline-block;
+            background:#d1ecff;
+            color:#007bff;
+            padding:6px 15px;
+            border-radius:25px;
+            font-weight:bold;
+        }
+
+        .pending{
+            display:inline-block;
+            background:#fff3cd;
+            color:#ff9800;
+            padding:6px 15px;
+            border-radius:25px;
+            font-weight:bold;
+        }
+
+        .btn{
+            border:none;
+            padding:10px 20px;
+            color:white;
+            border-radius:30px;
+            cursor:pointer;
+            font-size:15px;
+            font-weight:bold;
+            background:linear-gradient(90deg,#ff512f,#dd2476);
+            transition:.4s;
+        }
+
+        .btn:hover{
+            transform:translateY(-3px);
+            box-shadow:0 8px 18px rgba(221,36,118,.4);
+        }
+
+        @media(max-width:768px){
+
+            .table-box{
+                padding:20px;
+                overflow-x:auto;
+            }
+
+            table{
+                min-width:850px;
+            }
+
+            h2{
+                font-size:24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="table-box">
+
+    <h2>Event List</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event Name</th>
+                <th>Category</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Venue</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>1</td>
+                <td>Tech Fest</td>
+                <td>Technical</td>
+                <td>10-07-2026</td>
+                <td>12-07-2026</td>
+                <td>Auditorium</td>
+                <td><span class="active">Active</span></td>
+                <td><button class="btn">Edit</button></td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Sports Meet</td>
+                <td>Sports</td>
+                <td>15-07-2026</td>
+                <td>16-07-2026</td>
+                <td>Ground</td>
+                <td><span class="completed">Completed</span></td>
+                <td><button class="btn">Edit</button></td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td>Cultural Night</td>
+                <td>Cultural</td>
+                <td>20-07-2026</td>
+                <td>20-07-2026</td>
+                <td>Main Stage</td>
+                <td><span class="pending">Pending</span></td>
+                <td><button class="btn">Edit</button></td>
+            </tr>
+
+            <tr>
+                <td>4</td>
+                <td>Hackathon</td>
+                <td>Technical</td>
+                <td>25-07-2026</td>
+                <td>26-07-2026</td>
+                <td>Lab 1</td>
+                <td><span class="active">Active</span></td>
+                <td><button class="btn">Edit</button></td>
+            </tr>
+
+            <tr>
+                <td>5</td>
+                <td>Workshop</td>
+                <td>Seminar</td>
+                <td>28-07-2026</td>
+                <td>28-07-2026</td>
+                <td>Conference Hall</td>
+                <td><span class="completed">Completed</span></td>
+                <td><button class="btn">Edit</button></td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>
+<button type="button"
+        onclick="window.location.href='event-list.html'">
+    Event List
+</button>

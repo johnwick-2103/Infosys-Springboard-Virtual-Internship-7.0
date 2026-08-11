@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - EMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-8">
+<div class="card p-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+  <div class="d-flex align-items-center gap-3 mb-4 pb-3" style="border-bottom:1px solid var(--border-color);">
+    <div style="width:48px;height:48px;background:linear-gradient(135deg,#0284c7,#38bdf8);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-handshake text-white fs-5"></i>
+    </div>
+    <div>
+      <h4 class="fw-bold mb-0">{{ title }}</h4>
+      <p class="text-muted small mb-0">Fill in the vendor profile details.</p>
+    </div>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Vendor Contact Name *</label>
+        {{ form.name }}
+      </div>
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Company Name</label>
+        {{ form.company_name }}
+      </div>
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Service Type *</label>
+        {{ form.service_type }}
+      </div>
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Performance Rating (0.0 to 5.0)</label>
+        {{ form.performance_rating }}
+      </div>
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Phone Number</label>
+        {{ form.phone }}
+      </div>
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Email Address</label>
+        {{ form.email }}
+      </div>
+      <div class="col-12">
+        <label class="fw-semibold small mb-1">Office / Business Address</label>
+        {{ form.address }}
+      </div>
+      <div class="col-md-4">
+        <label class="fw-semibold small mb-1">Assign Event</label>
+        {{ form.assigned_event }}
+      </div>
+      <div class="col-md-4">
+        <label class="fw-semibold small mb-1">Contract Status</label>
+        {{ form.contract_status }}
+      </div>
+      <div class="col-md-4">
+        <label class="fw-semibold small mb-1">Payment Status</label>
+        {{ form.payment_status }}
+      </div>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3 rounded-3">
+      {% for f, errs in form.errors.items %}{% for e in errs %}<div>{{ f }}: {{ e }}</div>{% endfor %}{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-3 mt-4">
+      <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold"><i class="fas fa-save me-2"></i>Save Vendor</button>
+      <a href="{% url 'vendor_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}

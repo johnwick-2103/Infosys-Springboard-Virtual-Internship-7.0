@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - EMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-9">
+<div class="card p-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+  <div class="d-flex align-items-center gap-3 mb-4 pb-3" style="border-bottom:1px solid var(--border-color);">
+    <div style="width:48px;height:48px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-wallet text-white fs-5"></i>
+    </div>
+    <div>
+      <h4 class="fw-bold mb-0">{{ title }}</h4>
+      <p class="text-muted small mb-0">Define total budget and individual expense items.</p>
+    </div>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="fw-semibold small mb-1">Select Event *</label>
+        {{ form.event }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Total Budget (₹)</label>
+        {{ form.total_budget }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Sponsorship Amount (₹)</label>
+        {{ form.sponsorship_amount }}
+      </div>
+
+      <div class="col-12"><h6 class="fw-bold text-secondary mt-2 mb-0">Expenses Breakdown</h6></div>
+
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Venue Cost (₹)</label>
+        {{ form.venue_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Catering Cost (₹)</label>
+        {{ form.catering_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Marketing Cost (₹)</label>
+        {{ form.marketing_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Equipment Cost (₹)</label>
+        {{ form.equipment_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Decoration Cost (₹)</label>
+        {{ form.decoration_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Staff Cost (₹)</label>
+        {{ form.staff_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Transport Cost (₹)</label>
+        {{ form.transport_cost }}
+      </div>
+      <div class="col-md-3">
+        <label class="fw-semibold small mb-1">Other Expenses (₹)</label>
+        {{ form.other_expenses }}
+      </div>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger mt-3 rounded-3">
+      {% for f, errs in form.errors.items %}{% for e in errs %}<div>{{ f }}: {{ e }}</div>{% endfor %}{% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="d-flex gap-3 mt-4">
+      <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold"><i class="fas fa-save me-2"></i>Save Budget</button>
+      <a href="{% url 'budget_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}

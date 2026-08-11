@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Event Ticket - {{ registration.event.title }}{% endblock %}
+{% block page_title %}Event Ticket Pass{% endblock %}
+
+{% block extra_css %}
+<style>
+.ticket-card {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: white;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+.ticket-header {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ticket-body { padding: 32px; }
+.ticket-stub {
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 2px dashed rgba(255, 255, 255, 0.2);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+@media print {
+    body * { visibility: hidden; }
+    .printable-ticket, .printable-ticket * { visibility: visible; }
+    .printable-ticket { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 no-print">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-ticket-alt text-primary me-2"></i>Official Event Pass</h5>
+    <p class="text-muted small mb-0">Present this QR ticket pass at the event registration counter.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <button onclick="window.print()" class="btn btn-primary rounded-pill px-4"><i class="fas fa-print me-2"></i>Print / Download Ticket</button>
+    <a href="{% url 'joinevent_list' %}" class="btn btn-outline-secondary rounded-pill px-4"><i class="fas fa-arrow-left me-1"></i>Back</a>
+  </div>
+</div>
+
+<div class="printable-ticket">
+  <div class="ticket-card">
+    <div class="row g-0">
+      <div class="col-md-8">
+        <div class="ticket-header">
+          <div>
+            <span class="badge bg-white text-dark mb-1">OFFICIAL PASS</span>
+            <h4 class="fw-bold mb-0 text-white">{{ registration.event.title }}</h4>
+          </div>
+          <div class="text-end">
+            <span class="fs-6 text-white-50">Ticket #</span>
+            <div class="fw-bold font-monospace text-warning">{{ ticket.ticket_number|default:"TKT-ONLINE-PASS" }}</div>
+          </div>
+        </div>
+
+        <div class="ticket-body">
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Attendee Name</div>
+              <div class="fw-bold fs-5 text-white">{{ registration.full_name }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Registration ID</div>
+              <div class="fw-bold fs-5 text-info">REG-{{ registration.id }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Date</div>
+              <div class="fw-bold text-white"><i class="far fa-calendar-alt me-1 text-primary"></i> {{ registration.event.start_date }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Venue</div>
+              <div class="fw-bold text-white"><i class="fas fa-map-marker-alt me-1 text-danger"></i> {{ registration.event.venue }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Email</div>
+              <div class="text-white small">{{ registration.email }}</div>
+            </div>
+            <div class="col-6">
+              <div class="text-white-50 small uppercase">Phone</div>
+              <div class="text-white small">{{ registration.phone }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 ticket-stub text-center">
+        {% if ticket and ticket.qr_code %}
+          <img src="{{ ticket.qr_code.url }}" alt="QR Ticket" style="width:140px;height:140px;border-radius:12px;background:white;padding:8px;" class="mb-2">
+        {% else %}
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=TICKET:{{ ticket.ticket_number|default:'PASS' }}|MEMBER:{{ registration.full_name|urlencode }}|EVENT:{{ registration.event.title|urlencode }}" alt="QR Ticket" style="width:140px;height:140px;border-radius:12px;background:white;padding:8px;" class="mb-2">
+        {% endif %}
+        <div class="small text-white-50">Scan for Verification</div>
+        <div class="badge bg-success rounded-pill mt-2">VERIFIED ACCESS</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

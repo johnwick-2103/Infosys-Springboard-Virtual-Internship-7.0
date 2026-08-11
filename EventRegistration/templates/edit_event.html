@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Event{% endblock %}
+{% block page_title %}Edit Event Information{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, select, textarea{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+textarea{ height:120px; resize:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'event_list' %}" class="btn btn-secondary">← Back to Event List</a>
+    </div>
+
+    <h2>Edit Event #{{ event.id }} - {{ event.title }}</h2>
+    <br>
+
+    <form method="POST" action="{% url 'edit_event' event.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Event Name</label>
+            <input type="text" id="title" name="event_name" value="{{ event.title }}" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if event.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="start">Start Date</label>
+            <input type="date" id="start" name="start_date" value="{{ event.start_date|date:'Y-m-d' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="end">End Date</label>
+            <input type="date" id="end" name="end_date" value="{{ event.end_date|date:'Y-m-d' }}" required>
+        </div>
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" name="venue" value="{{ event.venue }}" required>
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="Active" {% if event.status == 'Active' %}selected{% endif %}>Active</option>
+                <option value="Pending" {% if event.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Completed" {% if event.status == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if event.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required>{{ event.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" name="limit_participants" id="limit_participants" {% if event.limit_participants %}checked{% endif %} onchange="document.getElementById('maxPField').style.display = this.checked ? 'block' : 'none';">
+                <span>Enable Seat Limit</span>
+            </label>
+            <div id="maxPField" style="display:{% if event.limit_participants %}block{% else %}none{% endif %}; margin-top:10px;">
+                <label for="max_participants">Maximum Participants</label>
+                <input type="number" id="max_participants" name="max_participants" min="1" value="{{ event.max_participants }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Update Event</button>
+    </form>
+</div>
+{% endblock %}

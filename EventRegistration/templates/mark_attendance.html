@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Mark Attendance - EMS{% endblock %}
+{% block page_title %}Mark Member Attendance{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-6">
+<div class="card p-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+  <div class="text-center mb-4">
+    <div style="width:64px;height:64px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:white;font-size:28px;" class="mb-2">
+      <i class="fas fa-user-check"></i>
+    </div>
+    <h4 class="fw-bold mb-1">{{ reg.full_name }}</h4>
+    <p class="text-muted small mb-0">Event: <strong>{{ reg.event.title }}</strong></p>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="mb-4 text-center">
+      <label class="fw-bold mb-3 text-dark d-block">Select Attendance Status</label>
+      <div class="btn-group w-100" role="group">
+        <input type="radio" class="btn-check" name="status" id="st_present" value="Present" {% if attendance.status == 'Present' %}checked{% endif %}>
+        <label class="btn btn-outline-success py-3 fw-bold" for="st_present"><i class="fas fa-check-circle d-block fs-4 mb-1"></i>Present</label>
+
+        <input type="radio" class="btn-check" name="status" id="st_late" value="Late" {% if attendance.status == 'Late' %}checked{% endif %}>
+        <label class="btn btn-outline-warning py-3 fw-bold" for="st_late"><i class="fas fa-clock d-block fs-4 mb-1"></i>Late</label>
+
+        <input type="radio" class="btn-check" name="status" id="st_absent" value="Absent" {% if attendance.status == 'Absent' or not attendance.status %}checked{% endif %}>
+        <label class="btn btn-outline-danger py-3 fw-bold" for="st_absent"><i class="fas fa-times-circle d-block fs-4 mb-1"></i>Absent</label>
+      </div>
+    </div>
+
+    <div class="d-flex gap-3">
+      <button type="submit" class="btn btn-primary rounded-pill px-4 flex-fill fw-bold"><i class="fas fa-save me-2"></i>Save Attendance</button>
+      <a href="{% url 'attendance_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}

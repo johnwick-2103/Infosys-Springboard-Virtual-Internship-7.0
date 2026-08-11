@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Event{% endblock %}
+{% block page_title %}Create New Event{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, select, textarea{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+textarea{ height:120px; resize:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'event_list' %}" class="btn btn-secondary">← Back to Event List</a>
+    </div>
+
+    <h2>Event Creation Form</h2>
+    <br>
+
+    <form method="POST" action="{% url 'create_event' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">Event Name</label>
+            <input type="text" id="title" name="event_name" required placeholder="Enter event title">
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% empty %}
+                    <option value="Technical">Technical</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Cultural">Cultural</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="start">Start Date</label>
+            <input type="date" id="start" name="start_date" required>
+        </div>
+        <div class="form-group">
+            <label for="end">End Date</label>
+            <input type="date" id="end" name="end_date" required>
+        </div>
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" name="venue" required placeholder="Enter venue location">
+        </div>
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="Active">Active</option>
+                <option value="Pending">Pending</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" required placeholder="Enter event details"></textarea>
+        </div>
+        <div class="form-group">
+            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" name="limit_participants" id="limit_participants" onchange="document.getElementById('maxPField').style.display = this.checked ? 'block' : 'none';">
+                <span>Enable Seat Limit</span>
+            </label>
+            <div id="maxPField" style="display:none; margin-top:10px;">
+                <label for="max_participants">Maximum Participants</label>
+                <input type="number" id="max_participants" name="max_participants" min="1" value="15" placeholder="Enter max participants">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Save & Create Event</button>
+    </form>
+</div>
+{% endblock %}

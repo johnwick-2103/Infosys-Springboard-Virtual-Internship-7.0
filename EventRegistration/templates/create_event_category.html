@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Event Category{% endblock %}
+{% block page_title %}Create New Event Category{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, textarea{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+textarea{ height:100px; resize:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'event_category' %}" class="btn btn-secondary">← Back to Category List</a>
+    </div>
+
+    <h2>Create Category Form</h2>
+    <br>
+
+    <form method="POST" action="{% url 'create_event_category' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Category Name</label>
+            <input type="text" id="name" name="name" required placeholder="Enter category name (e.g., Technical, Sports)">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Enter category description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Save Category</button>
+    </form>
+</div>
+{% endblock %}

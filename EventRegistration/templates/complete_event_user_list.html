@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Completed Event Users{% endblock %}
+{% block page_title %}Completed Event Participants History{% endblock %}
+
+{% block content %}
+<div class="table-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2>Completed Event Users Table</h2>
+        <a href="{% url 'complete_event_list' %}" class="btn btn-secondary">← Back to Completed Events</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">S.No.</th>
+                <th>Participant Name</th>
+                <th>Email</th>
+                <th>Event Name</th>
+                <th>Completion Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in completed_users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><strong>{{ user.full_name }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.event.title }}</td>
+                <td><span class="completed">Attended & Completed</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No completed participant records found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

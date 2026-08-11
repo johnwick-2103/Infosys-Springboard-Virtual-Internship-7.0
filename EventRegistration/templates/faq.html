@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQs - Event Management System{% endblock %}
+{% block page_title %}Frequently Asked Questions{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2 animate__animated animate__fadeIn">
+    <div class="glass-card p-4">
+        <div class="text-center mb-5 max-width-600 mx-auto">
+            <span class="badge bg-primary px-3 py-2 rounded-pill mb-2">Help Center</span>
+            <h3 class="fw-bold text-dark mt-2">Common Inquiries & Answers</h3>
+            <p class="text-muted">Browse through answers to common questions about using the Eventure system.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="accordion accordion-flush" id="faqAccordionPage">
+                    <!-- Q1 -->
+                    <div class="accordion-item border-bottom py-3">
+                        <h2 class="accordion-header" id="headingOneP">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneP">
+                                How can I register for an upcoming event?
+                            </button>
+                        </h2>
+                        <div id="collapseOneP" class="accordion-collapse collapse" data-bs-parent="#faqAccordionPage">
+                            <div class="accordion-body text-muted">
+                                Once logged into your Participant Dashboard, navigate to the **Browse Events** section on the sidebar. Under the active events, click the **Register** button, check your details (name, email, phone) in the registration form, and submit.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Q2 -->
+                    <div class="accordion-item border-bottom py-3">
+                        <h2 class="accordion-header" id="headingTwoP">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwoP">
+                                What is the Watchlist feature?
+                            </button>
+                        </h2>
+                        <div id="collapseTwoP" class="accordion-collapse collapse" data-bs-parent="#faqAccordionPage">
+                            <div class="accordion-body text-muted">
+                                The **Watchlist** allows you to bookmark events you are interested in but not ready to register for. By adding an event to your watchlist, it will be tracked under **My Watchlist** on your dashboard, giving you a quick shortcut to register later.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q3 -->
+                    <div class="accordion-item border-bottom py-3">
+                        <h2 class="accordion-header" id="headingThreeP">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThreeP">
+                                How are my marks and evaluations generated?
+                            </button>
+                        </h2>
+                        <div id="collapseThreeP" class="accordion-collapse collapse" data-bs-parent="#faqAccordionPage">
+                            <div class="accordion-body text-muted">
+                                After an event has concluded, the system administrator will grade participant performance or attendance and add specific remarks. You can view these grades in the **My Evaluation Marks** section of the sidebar.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q4 -->
+                    <div class="accordion-item border-bottom py-3">
+                        <h2 class="accordion-header" id="headingFourP">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFourP">
+                                How do I change between Light and Dark mode?
+                            </button>
+                        </h2>
+                        <div id="collapseFourP" class="accordion-collapse collapse" data-bs-parent="#faqAccordionPage">
+                            <div class="accordion-body text-muted">
+                                You can toggle the primary dark mode using the **Moon / Sun toggle button** next to the logout button in the header dashboard. Additionally, you can choose from 9 custom curated themes using the **Select Theme** panel located at the bottom of the sidebar.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q5 -->
+                    <div class="accordion-item border-bottom py-3">
+                        <h2 class="accordion-header" id="headingFiveP">
+                            <button class="accordion-button collapsed fw-bold text-dark fs-6 bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiveP">
+                                Who should I contact for registration corrections?
+                            </button>
+                        </h2>
+                        <div id="collapseFiveP" class="accordion-collapse collapse" data-bs-parent="#faqAccordionPage">
+                            <div class="accordion-body text-muted">
+                                If you need to make changes to your registered name, phone, or email, navigate to the **Contact Us** page and send a support request. Admin staff will resolve it directly.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

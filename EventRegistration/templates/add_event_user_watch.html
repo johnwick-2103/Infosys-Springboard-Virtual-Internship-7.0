@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Event Watch{% endblock %}
+{% block page_title %}Add Event to User Watchlist{% endblock %}
+
+{% block extra_css %}
+<style>
+.form-group{ margin-bottom:20px; }
+label{ display:block; margin-bottom:8px; font-weight:bold; color:#444; }
+input, select{ width:100%; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:15px; outline:none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div style="margin-bottom:20px;">
+        <a href="{% url 'event_user_watch_list' %}" class="btn btn-secondary">← Back to Watchlist</a>
+    </div>
+
+    <h2>Add User Watch Form</h2>
+    <br>
+
+    <form method="POST" action="{% url 'add_event_user_watch' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="event">Select Event</label>
+            <select id="event" name="event_id" required>
+                {% for ev in events %}
+                    <option value="{{ ev.id }}">{{ ev.title }} ({{ ev.category.name|default:"General" }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Add to Watchlist</button>
+    </form>
+</div>
+{% endblock %}

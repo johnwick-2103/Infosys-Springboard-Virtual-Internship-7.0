@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - EMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-8">
+<div class="card" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+  <div class="card-body p-4">
+    <div class="d-flex align-items-center gap-3 mb-4 pb-3" style="border-bottom:1px solid var(--border-color);">
+      <div style="width:48px;height:48px;background:linear-gradient(135deg,#3b82f6,#6366f1);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <i class="fas fa-building text-white fs-5"></i>
+      </div>
+      <div>
+        <h4 class="fw-bold mb-0">{{ title }}</h4>
+        <p class="text-muted small mb-0">Fill in the venue details below.</p>
+      </div>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label class="fw-semibold small mb-1">Venue Name *</label>
+          {{ form.name }}
+        </div>
+        <div class="col-md-4">
+          <label class="fw-semibold small mb-1">Status</label>
+          {{ form.status }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Location / City *</label>
+          {{ form.location }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Capacity (persons)</label>
+          {{ form.capacity }}
+        </div>
+        <div class="col-12">
+          <label class="fw-semibold small mb-1">Full Address</label>
+          {{ form.address }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Contact Person</label>
+          {{ form.contact_person }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Phone</label>
+          {{ form.phone }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Email</label>
+          {{ form.email }}
+        </div>
+        <div class="col-md-6">
+          <label class="fw-semibold small mb-1">Available From</label>
+          {{ form.available_date }}
+        </div>
+        <div class="col-12">
+          <label class="fw-semibold small mb-1">Venue Image</label>
+          {{ form.image }}
+          {% if venue and venue.image %}
+          <div class="mt-2"><img src="{{ venue.image.url }}" alt="Current" style="height:80px;border-radius:8px;object-fit:cover;"> <small class="text-muted ms-2">Current image</small></div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if form.errors %}
+      <div class="alert alert-danger mt-3 rounded-3">
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}<div><i class="fas fa-exclamation-circle me-2"></i>{{ field }}: {{ error }}</div>{% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="d-flex gap-3 mt-4">
+        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold"><i class="fas fa-save me-2"></i>Save Venue</button>
+        <a href="{% url 'venue_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background:linear-gradient(135deg,#667eea,#764ba2);
+            padding:20px;
+        }
+
+        .container{
+            width:800px;
+            max-width:100%;
+            background:#fff;
+            padding:35px;
+            border-radius:15px;
+            box-shadow:0 15px 35px rgba(0,0,0,0.25);
+        }
+
+        h2{
+            text-align:center;
+            color:#2c3e50;
+            margin-bottom:30px;
+            font-size:32px;
+        }
+
+        .form-group{
+            margin-bottom:20px;
+        }
+
+        label{
+            display:block;
+            margin-bottom:8px;
+            font-weight:bold;
+            color:#444;
+        }
+
+        input,
+        select,
+        textarea{
+            width:100%;
+            padding:12px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:16px;
+            outline:none;
+            transition:.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus{
+            border-color:#2575fc;
+            box-shadow:0 0 8px rgba(37,117,252,.3);
+        }
+
+        textarea{
+            resize:none;
+            height:120px;
+        }
+
+        .btn{
+            background:linear-gradient(90deg,#28a745,#20c997);
+            color:white;
+            border:none;
+            padding:14px 25px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:17px;
+            transition:.3s;
+        }
+
+        .btn:hover{
+            transform:translateY(-2px);
+            box-shadow:0 8px 20px rgba(40,167,69,.4);
+        }
+
+        @media(max-width:768px){
+
+            .container{
+                padding:20px;
+            }
+
+            h2{
+                font-size:26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Create Event</h2>
+
+    <form>
+
+        <div class="form-group">
+            <label for="event">Event Name</label>
+            <input type="text" id="event" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" required>
+                <option>Technical</option>
+                <option>Sports</option>
+                <option>Cultural</option>
+                <option>Seminar</option>
+                <option>Workshop</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="start">Start Date</label>
+            <input type="date" id="start" required>
+        </div>
+
+        <div class="form-group">
+            <label for="end">End Date</label>
+            <input type="date" id="end" required>
+        </div>
+
+        <div class="form-group">
+            <label for="venue">Venue</label>
+            <input type="text" id="venue" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" required></textarea>
+        </div>
+
+        <button type="submit" class="btn">Create Event</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

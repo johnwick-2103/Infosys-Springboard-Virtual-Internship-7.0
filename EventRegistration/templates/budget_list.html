@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% block title %}Budget Management Overview - Event Management System{% endblock %}
+{% block page_title %}Budget Management Overview{% endblock %}
+
+{% block extra_css %}
+<style>
+.stat-card-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+.budget-stat-box { background: var(--content-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 22px; }
+@media(max-width: 992px) { .stat-card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 768px) { .stat-card-grid { grid-template-columns: 1fr; } }
+
+/* Module Info Banner */
+.module-info-banner {
+    background: linear-gradient(135deg, #14532d 0%, #059669 55%, #34d399 100%);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+.module-info-banner::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+}
+.module-info-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+}
+.info-feature-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+}
+.info-feature-chip:hover { background: rgba(255,255,255,0.25); }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Module Info Banner -->
+<div class="module-info-banner animate__animated animate__fadeInDown mb-4">
+  <div class="row align-items-center g-3" style="position:relative;z-index:1;">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <div style="width:52px;height:52px;background:rgba(255,255,255,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-0" style="font-size:20px;">Budget Management Overview</h4>
+          <p class="mb-0" style="font-size:13px;opacity:0.85;">Module 6 &mdash; Event Management System</p>
+        </div>
+      </div>
+      <p class="mb-3" style="font-size:14px;opacity:0.9;max-width:560px;">
+        Plan, allocate, and monitor event budgets &mdash; track venue costs, catering expenses, sponsorships,
+        and remaining balances. Gain visual insights into spending patterns across all events.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="info-feature-chip"><i class="fas fa-rupee-sign"></i> Budget Allocation</span>
+        <span class="info-feature-chip"><i class="fas fa-receipt"></i> Expense Tracking</span>
+        <span class="info-feature-chip"><i class="fas fa-hand-holding-usd"></i> Sponsorship Mgmt</span>
+        <span class="info-feature-chip"><i class="fas fa-chart-bar"></i> Visual Analytics</span>
+        <span class="info-feature-chip"><i class="fas fa-balance-scale"></i> Balance Overview</span>
+      </div>
+    </div>
+    <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+      <div class="d-flex flex-wrap gap-3 justify-content-lg-end">
+        <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;min-width:120px;text-align:center;">
+          <div style="font-size:22px;font-weight:800;">₹{{ total_budget|floatformat:0 }}</div>
+          <div style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Total Allocated</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;min-width:120px;text-align:center;">
+          <div style="font-size:22px;font-weight:800;">₹{{ total_sponsorship|floatformat:0 }}</div>
+          <div style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Sponsorship</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;min-width:120px;text-align:center;">
+          <div style="font-size:22px;font-weight:800;">₹{{ total_remaining|floatformat:0 }}</div>
+          <div style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Remaining</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-wallet text-success me-2"></i>Event Budgets</h5>
+    <p class="text-muted small mb-0">Track allocations, expenses, venue costs, catering, and remaining budgets.</p>
+  </div>
+  {% if user.is_staff %}
+  <a href="{% url 'budget_add' %}" class="btn btn-primary rounded-pill px-4"><i class="fas fa-plus me-2"></i>Add Budget</a>
+  {% endif %}
+</div>
+
+<!-- Key Stat Summary Cards -->
+<div class="stat-card-grid">
+  <div class="budget-stat-box">
+    <div class="text-muted small fw-bold text-uppercase">Total Allocated Budget</div>
+    <h3 class="fw-bold text-primary mt-1 mb-0">₹{{ total_budget|floatformat:2 }}</h3>
+  </div>
+  <div class="budget-stat-box">
+    <div class="text-muted small fw-bold text-uppercase">Total Sponsorship</div>
+    <h3 class="fw-bold text-success mt-1 mb-0">₹{{ total_sponsorship|floatformat:2 }}</h3>
+  </div>
+  <div class="budget-stat-box">
+    <div class="text-muted small fw-bold text-uppercase">Total Expenses</div>
+    <h3 class="fw-bold text-danger mt-1 mb-0">₹{{ total_expenses|floatformat:2 }}</h3>
+  </div>
+  <div class="budget-stat-box">
+    <div class="text-muted small fw-bold text-uppercase">Remaining Balance</div>
+    <h3 class="fw-bold {% if total_remaining < 0 %}text-danger{% else %}text-success{% endif %} mt-1 mb-0">₹{{ total_remaining|floatformat:2 }}</h3>
+  </div>
+</div>
+
+<!-- Chart & Expense Breakdown -->
+<div class="card p-4 mb-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+  <h6 class="fw-bold mb-3"><i class="fas fa-chart-pie text-warning me-2"></i>Expenses &amp; Sponsorship Breakdown Across All Events</h6>
+  <div style="height:260px;">
+    <canvas id="budgetBreakdownChart"></canvas>
+  </div>
+</div>
+
+<!-- Budget Table -->
+{% if budgets %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr>
+      <th class="px-4 py-3">Event</th>
+      <th>Total Budget</th>
+      <th>Expenses</th>
+      <th>Sponsorship</th>
+      <th>Remaining</th>
+      {% if user.is_staff %}<th>Actions</th>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for b in budgets %}
+  <tr>
+    <td class="px-4"><a href="{% url 'event_detail' b.event.id %}" class="fw-bold text-decoration-none">{{ b.event.title }}</a></td>
+    <td class="fw-bold text-primary">₹{{ b.total_budget }}</td>
+    <td class="text-danger">₹{{ b.total_expenses }}</td>
+    <td class="text-success">₹{{ b.sponsorship_amount }}</td>
+    <td><span class="badge {% if b.remaining_budget < 0 %}bg-danger{% else %}bg-success{% endif %} fs-6">₹{{ b.remaining_budget }}</span></td>
+    {% if user.is_staff %}
+    <td>
+      <div class="d-flex gap-1">
+        <a href="{% url 'budget_edit' b.id %}" class="btn btn-sm btn-outline-warning rounded-pill px-2"><i class="fas fa-edit"></i></a>
+        <a href="{% url 'budget_delete' b.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-2"><i class="fas fa-trash"></i></a>
+      </div>
+    </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="text-center py-5" style="background:var(--content-bg);border-radius:16px;border:2px dashed var(--border-color);">
+  <i class="fas fa-calculator fa-4x text-muted mb-3 d-block"></i>
+  <h5 class="text-muted">No Budget Records Found</h5>
+  {% if user.is_staff %}<a href="{% url 'budget_add' %}" class="btn btn-primary rounded-pill px-4 mt-2"><i class="fas fa-plus me-2"></i>Create Budget</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const ctx = document.getElementById("budgetBreakdownChart");
+    if(ctx) {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ budget_labels_json|safe }},
+                datasets: [{
+                    label: 'Cost (₹)',
+                    data: {{ budget_data_json|safe }},
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#64748b', '#059669']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

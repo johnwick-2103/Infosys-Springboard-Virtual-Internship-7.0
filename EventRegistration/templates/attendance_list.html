@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Tracking - EMS{% endblock %}
+{% block page_title %}QR &amp; Attendance Tracking{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-qrcode text-primary me-2"></i>Attendance Dashboard</h5>
+    <p class="text-muted small mb-0">Track present, absent, and late member check-ins.</p>
+  </div>
+</div>
+
+<form method="GET" class="mb-4">
+  <div class="row g-3" style="background:var(--content-bg);border:1px solid var(--border-color);border-radius:14px;padding:18px;">
+    <div class="col-lg-8">
+      <select name="event" class="form-select">
+        <option value="">All Events</option>
+        {% for ev in events %}<option value="{{ ev.id }}" {% if event_filter == ev.id|stringformat:"i" %}selected{% endif %}>{{ ev.title }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-lg-2"><button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-1"></i>Filter</button></div>
+    <div class="col-lg-2"><a href="{% url 'attendance_list' %}" class="btn btn-outline-secondary w-100"><i class="fas fa-times me-1"></i>Clear</a></div>
+  </div>
+</form>
+
+{% if attendances %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr>
+      <th class="px-4 py-3">#</th>
+      <th>Member Name</th>
+      <th>Event</th>
+      <th>Status</th>
+      <th>Check-in Time</th>
+      <th>Marked By</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for att in attendances %}
+  <tr>
+    <td class="px-4">{{ forloop.counter }}</td>
+    <td><strong>{{ att.registration.full_name }}</strong><br><small class="text-muted">{{ att.registration.email }}</small></td>
+    <td><a href="{% url 'event_detail' att.registration.event.id %}" class="text-decoration-none">{{ att.registration.event.title }}</a></td>
+    <td>
+      <span class="badge {% if att.status == 'Present' %}bg-success{% elif att.status == 'Late' %}bg-warning text-dark{% else %}bg-danger{% endif %} fs-6">{{ att.status }}</span>
+    </td>
+    <td>{% if att.check_in_time %}{{ att.check_in_time|date:"d M Y, h:i A" }}{% else %}<span class="text-muted">—</span>{% endif %}</td>
+    <td>{{ att.marked_by.username|default:"System" }}</td>
+    <td>
+      <a href="{% url 'mark_attendance' att.registration.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3"><i class="fas fa-check-circle me-1"></i>Update</a>
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="text-center py-5" style="background:var(--content-bg);border-radius:16px;border:2px dashed var(--border-color);">
+  <i class="fas fa-user-check fa-4x text-muted mb-3 d-block"></i>
+  <h5 class="text-muted">No Attendance Records</h5>
+  <p class="text-muted small">Select an event or register members to start tracking attendance.</p>
+</div>
+{% endif %}
+{% endblock %}

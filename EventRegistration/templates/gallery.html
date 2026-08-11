@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %}Event Gallery - EMS{% endblock %}
+{% block page_title %}Event Image Gallery{% endblock %}
+
+{% block extra_css %}
+<style>
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.gallery-card { background: var(--content-bg); border-radius: 18px; border: 1px solid var(--border-color); overflow: hidden; transition: all 0.3s ease; }
+.gallery-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.08); }
+.gallery-img-wrapper { height: 200px; position: relative; background: linear-gradient(135deg, #3b82f6, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 54px; color: rgba(255,255,255,0.4); }
+@media(max-width: 992px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+@media(max-width: 576px) { .gallery-grid { grid-template-columns: 1fr; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-images text-primary me-2"></i>Event Media Gallery</h5>
+    <p class="text-muted small mb-0">Browse media highlights from technical workshops, hackathons, sports tournaments, and cultural events.</p>
+  </div>
+</div>
+
+<div class="gallery-grid">
+  <!-- Technical -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);">
+      <i class="fas fa-laptop-code"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-primary mb-1">Technical</span>
+      <h6 class="fw-bold mb-1">Annual Tech Symposium 2026</h6>
+      <p class="text-muted small mb-0">Keynotes, coding competitions, and AI workshops.</p>
+    </div>
+  </div>
+
+  <!-- Workshops -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #10b981, #047857);">
+      <i class="fas fa-chalkboard-teacher"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-success mb-1">Workshop</span>
+      <h6 class="fw-bold mb-1">Full-Stack Development Bootcamp</h6>
+      <p class="text-muted small mb-0">Hands-on Django and React building sessions.</p>
+    </div>
+  </div>
+
+  <!-- Hackathons -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #f59e0b, #b45309);">
+      <i class="fas fa-microchip"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-warning text-dark mb-1">Hackathon</span>
+      <h6 class="fw-bold mb-1">24-Hour Code Sprint</h6>
+      <p class="text-muted small mb-0">Non-stop building for innovative solutions.</p>
+    </div>
+  </div>
+
+  <!-- Cultural -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #8b5cf6, #5b21b6);">
+      <i class="fas fa-music"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-purple text-white mb-1" style="background:#8b5cf6;">Cultural</span>
+      <h6 class="fw-bold mb-1">Spring Cultural Fest 2026</h6>
+      <p class="text-muted small mb-0">Music, dance, art, and drama performances.</p>
+    </div>
+  </div>
+
+  <!-- Sports -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+      <i class="fas fa-trophy"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-danger mb-1">Sports</span>
+      <h6 class="fw-bold mb-1">Inter-Department Cricket Cup</h6>
+      <p class="text-muted small mb-0">Thrilling matches and trophy ceremony.</p>
+    </div>
+  </div>
+
+  <!-- General -->
+  <div class="gallery-card">
+    <div class="gallery-img-wrapper" style="background: linear-gradient(135deg, #06b6d4, #0e7490);">
+      <i class="fas fa-certificate"></i>
+    </div>
+    <div class="p-3">
+      <span class="badge bg-info text-dark mb-1">General</span>
+      <h6 class="fw-bold mb-1">Annual Awards &amp; Convocation</h6>
+      <p class="text-muted small mb-0">Recognizing top achievers and organizers.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

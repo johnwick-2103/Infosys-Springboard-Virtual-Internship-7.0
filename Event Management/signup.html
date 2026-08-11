@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Signup Form</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            background:linear-gradient(135deg,#6a11cb,#2575fc);
+        }
+
+        .container{
+            background:white;
+            width:700px;
+            max-width:90%;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+            color:#333;
+        }
+
+        form{
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:20px;
+        }
+
+        .full-width{
+            grid-column:1/3;
+        }
+
+        label{
+            display:block;
+            margin-bottom:6px;
+            font-weight:bold;
+            color:#444;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:16px;
+        }
+
+        input:focus{
+            outline:none;
+            border-color:#2575fc;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+            background:#2575fc;
+            color:white;
+            border:none;
+            border-radius:8px;
+            font-size:18px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            background:#1a5ed9;
+            transform:scale(1.02);
+        }
+
+        .login{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:5px;
+            margin-top:20px;
+        }
+
+        .login a{
+            text-decoration:none;
+            color:#2575fc;
+            font-weight:bold;
+        }
+
+        .login a:hover{
+            text-decoration:underline;
+        }
+
+        @media(max-width:768px){
+
+            form{
+                grid-template-columns:1fr;
+            }
+
+            .full-width{
+                grid-column:1;
+            }
+
+            .container{
+                padding:20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Signup Form</h2>
+
+        <form>
+
+            <div>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" required minlength="3">
+            </div>
+
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+
+            <div>
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required minlength="10">
+            </div>
+
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" required minlength="8">
+            </div>
+
+            <div class="full-width">
+                <label for="confirm">Confirm Password</label>
+                <input type="password" id="confirm" required minlength="8">
+            </div>
+
+            <div class="full-width">
+                <button type="submit">Sign Up</button>
+            </div>
+
+        </form>
+
+        <div class="login">
+            <span>Already have an account?</span>
+            <a href="#">Login</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

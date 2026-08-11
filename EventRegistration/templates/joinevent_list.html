@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Event Members Directory - EMS{% endblock %}
+{% block page_title %}Joined Event Members Directory{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-users text-primary me-2"></i>Event Registrations</h5>
+    <p class="text-muted small mb-0">View registered participants, ticket QR passes, and attendance status.</p>
+  </div>
+  <a href="{% url 'add_event_member' %}" class="btn btn-primary rounded-pill px-4"><i class="fas fa-plus me-2"></i>Register Member</a>
+</div>
+
+<!-- Search & Filter Bar -->
+<form method="GET" class="mb-4">
+  <div class="row g-3" style="background:var(--content-bg);border:1px solid var(--border-color);border-radius:14px;padding:18px;">
+    <div class="col-lg-6">
+      <div class="input-group">
+        <span class="input-group-text bg-transparent"><i class="fas fa-search text-muted"></i></span>
+        <input type="text" name="q" class="form-control" placeholder="Search by name, email, phone..." value="{{ q }}">
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <select name="event" class="form-select">
+        <option value="">All Events</option>
+        {% for ev in events %}
+        <option value="{{ ev.id }}" {% if event_filter == ev.id|stringformat:"i" %}selected{% endif %}>{{ ev.title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-lg-2">
+      <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>Search</button>
+    </div>
+  </div>
+</form>
+
+{% if joined_members %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr>
+      <th class="px-4 py-3">#</th>
+      <th>Member Name</th>
+      <th>Contact Info</th>
+      <th>Event Name</th>
+      <th>Reg Date</th>
+      <th>Ticket Pass</th>
+      {% if user.is_staff %}<th>Attendance</th>{% endif %}
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for reg in joined_members %}
+    <tr>
+      <td class="px-4">{{ forloop.counter }}</td>
+      <td><strong>{{ reg.full_name }}</strong></td>
+      <td>
+        <div><i class="fas fa-envelope text-info me-1" style="font-size:11px;"></i>{{ reg.email }}</div>
+        <div><i class="fas fa-phone text-warning me-1" style="font-size:11px;"></i>{{ reg.phone }}</div>
+      </td>
+      <td><a href="{% url 'event_detail' reg.event.id %}" class="fw-bold text-decoration-none">{{ reg.event.title }}</a></td>
+      <td>{{ reg.registration_date|date:"d M Y" }}</td>
+      <td>
+        <a href="{% url 'view_ticket' reg.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+          <i class="fas fa-qrcode me-1"></i>View Ticket
+        </a>
+      </td>
+      {% if user.is_staff %}
+      <td>
+        <a href="{% url 'mark_attendance' reg.id %}" class="btn btn-sm btn-outline-success rounded-pill px-2">
+          <i class="fas fa-check-circle me-1"></i>Mark
+        </a>
+      </td>
+      {% endif %}
+      <td>
+        <a href="{% url 'remove_event_member' reg.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-2">
+          {% if user.is_staff %}Remove{% else %}Cancel{% endif %}
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if page_obj and page_obj.has_other_pages %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&event={{ event_filter }}">Previous</a></li>{% endif %}
+    {% for num in page_obj.paginator.page_range %}<li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}&q={{ q }}&event={{ event_filter }}">{{ num }}</a></li>{% endfor %}
+    {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ q }}&event={{ event_filter }}">Next</a></li>{% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="text-center py-5" style="background:var(--content-bg);border-radius:16px;border:2px dashed var(--border-color);">
+  <i class="fas fa-users-slash fa-4x text-muted mb-3 d-block"></i>
+  <h5 class="text-muted">No Member Registrations Found</h5>
+  <p class="text-muted small">Register members or explore active events.</p>
+  <a href="{% url 'add_event_member' %}" class="btn btn-primary rounded-pill px-4 mt-2"><i class="fas fa-plus me-2"></i>Register Now</a>
+</div>
+{% endif %}
+{% endblock %}

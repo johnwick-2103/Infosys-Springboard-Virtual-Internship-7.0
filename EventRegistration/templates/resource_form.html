@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - EMS{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-7">
+<div class="card p-4" style="border-radius:18px;border:1px solid var(--border-color);background:var(--content-bg);">
+  <div class="d-flex align-items-center gap-3 mb-4 pb-3" style="border-bottom:1px solid var(--border-color);">
+    <div style="width:48px;height:48px;background:linear-gradient(135deg,#10b981,#34d399);border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-tools text-white fs-5"></i></div>
+    <div><h4 class="fw-bold mb-0">{{ title }}</h4><p class="text-muted small mb-0">Fill in the resource details.</p></div>
+  </div>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="row g-3">
+      <div class="col-md-8"><label class="fw-semibold small mb-1">Resource Name *</label>{{ form.name }}</div>
+      <div class="col-md-4"><label class="fw-semibold small mb-1">Type</label>{{ form.resource_type }}</div>
+      <div class="col-md-4"><label class="fw-semibold small mb-1">Total Quantity</label>{{ form.quantity }}</div>
+      <div class="col-md-4"><label class="fw-semibold small mb-1">Available Quantity</label>{{ form.available_quantity }}</div>
+      <div class="col-md-4"><label class="fw-semibold small mb-1">Status</label>{{ form.status }}</div>
+      <div class="col-12"><label class="fw-semibold small mb-1">Assign to Event (optional)</label>{{ form.assigned_event }}</div>
+    </div>
+    {% if form.errors %}<div class="alert alert-danger mt-3 rounded-3">{% for f, errs in form.errors.items %}{% for e in errs %}<div>{{ f }}: {{ e }}</div>{% endfor %}{% endfor %}</div>{% endif %}
+    <div class="d-flex gap-3 mt-4">
+      <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold"><i class="fas fa-save me-2"></i>Save Resource</button>
+      <a href="{% url 'resource_list' %}" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+    </div>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}

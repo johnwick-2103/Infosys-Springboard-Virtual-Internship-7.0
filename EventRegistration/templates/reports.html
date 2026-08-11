@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Reports &amp; Analytics Export - EMS{% endblock %}
+{% block page_title %}System Reports &amp; Export{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1"><i class="fas fa-file-alt text-primary me-2"></i>Comprehensive System Reports</h5>
+    <p class="text-muted small mb-0">Generate and export Event, Member, Attendance, Budget, and Venue reports.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'export_csv' %}?type={{ report_type }}" class="btn btn-success rounded-pill px-4"><i class="fas fa-file-csv me-2"></i>Export CSV</a>
+    <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-4"><i class="fas fa-print me-2"></i>Print Report</button>
+  </div>
+</div>
+
+<!-- Report Selection Tabs -->
+<div class="nav nav-pills mb-4 gap-2" style="background:var(--content-bg);padding:12px;border-radius:16px;border:1px solid var(--border-color);">
+  <a href="?type=events" class="nav-link {% if report_type == 'events' %}active{% endif %} rounded-pill px-4 fw-bold"><i class="fas fa-calendar-alt me-2"></i>Events Report</a>
+  <a href="?type=members" class="nav-link {% if report_type == 'members' %}active{% endif %} rounded-pill px-4 fw-bold"><i class="fas fa-users me-2"></i>Members Report</a>
+  <a href="?type=attendance" class="nav-link {% if report_type == 'attendance' %}active{% endif %} rounded-pill px-4 fw-bold"><i class="fas fa-user-check me-2"></i>Attendance Report</a>
+</div>
+
+<!-- Report Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <small class="text-muted fw-bold uppercase">Total Events</small>
+      <h3 class="fw-bold text-primary mb-0 mt-1">{{ total_events }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <small class="text-muted fw-bold uppercase">Total Registrations</small>
+      <h3 class="fw-bold text-success mb-0 mt-1">{{ total_members }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <small class="text-muted fw-bold uppercase">Present Attendance</small>
+      <h3 class="fw-bold text-info mb-0 mt-1">{{ present_count }}</h3>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="p-3 rounded-3" style="background:var(--content-bg);border:1px solid var(--border-color);">
+      <small class="text-muted fw-bold uppercase">Absentee Count</small>
+      <h3 class="fw-bold text-danger mb-0 mt-1">{{ absent_count }}</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Report Table -->
+{% if report_type == 'events' %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr><th>ID</th><th>Title</th><th>Category</th><th>Status</th><th>Start Date</th><th>Venue</th><th>Registered</th></tr>
+  </thead>
+  <tbody>
+  {% for ev in events %}
+  <tr>
+    <td>#{{ ev.id }}</td>
+    <td><a href="{% url 'event_detail' ev.id %}" class="fw-bold text-decoration-none">{{ ev.title }}</a></td>
+    <td>{{ ev.category.name|default:"—" }}</td>
+    <td><span class="badge {% if ev.status == 'Active' %}bg-success{% elif ev.status == 'Completed' %}bg-primary{% else %}bg-warning text-dark{% endif %}">{{ ev.status }}</span></td>
+    <td>{{ ev.start_date }}</td>
+    <td>{{ ev.venue }}</td>
+    <td>{{ ev.registrations.count }}/{{ ev.max_participants }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% elif report_type == 'members' %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr><th>ID</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Assigned Event</th><th>Reg Date</th></tr>
+  </thead>
+  <tbody>
+  {% for m in members %}
+  <tr>
+    <td>#{{ m.id }}</td>
+    <td><strong>{{ m.full_name }}</strong></td>
+    <td>{{ m.email }}</td>
+    <td>{{ m.phone }}</td>
+    <td><a href="{% url 'event_detail' m.event.id %}">{{ m.event.title }}</a></td>
+    <td>{{ m.registration_date|date:"d M Y, H:i" }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% elif report_type == 'attendance' %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr><th>Member</th><th>Event</th><th>Status</th><th>Check-in Time</th></tr>
+  </thead>
+  <tbody>
+  {% for a in attendances %}
+  <tr>
+    <td><strong>{{ a.registration.full_name }}</strong></td>
+    <td>{{ a.registration.event.title }}</td>
+    <td><span class="badge {% if a.status == 'Present' %}bg-success{% elif a.status == 'Late' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ a.status }}</span></td>
+    <td>{{ a.check_in_time|default:"—" }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

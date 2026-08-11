@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Vendor Management - Event Management System{% endblock %}
+{% block page_title %}Vendor Management{% endblock %}
+{% block extra_css %}
+<style>
+.module-info-banner {
+    background: linear-gradient(135deg, #0c4a6e 0%, #0284c7 55%, #38bdf8 100%);
+    border-radius: 18px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+.module-info-banner::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+}
+.module-info-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+}
+.info-feature-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 30px;
+    padding: 6px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+}
+.info-feature-chip:hover { background: rgba(255,255,255,0.25); }
+</style>
+{% endblock %}
+{% block content %}
+
+<!-- Module Info Banner -->
+<div class="module-info-banner animate__animated animate__fadeInDown mb-4">
+  <div class="row align-items-center g-3" style="position:relative;z-index:1;">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <div style="width:52px;height:52px;background:rgba(255,255,255,0.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">
+          <i class="fas fa-handshake"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-0" style="font-size:20px;">Vendor Management</h4>
+          <p class="mb-0" style="font-size:13px;opacity:0.85;">Module 5 &mdash; Event Management System</p>
+        </div>
+      </div>
+      <p class="mb-3" style="font-size:14px;opacity:0.9;max-width:560px;">
+        Manage all event service vendors and contractors &mdash; caterers, AV technicians, decorators, and more.
+        Track contract statuses, payment progress, performance ratings, and event assignments in one place.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="info-feature-chip"><i class="fas fa-file-contract"></i> Contract Tracking</span>
+        <span class="info-feature-chip"><i class="fas fa-credit-card"></i> Payment Status</span>
+        <span class="info-feature-chip"><i class="fas fa-star"></i> Performance Rating</span>
+        <span class="info-feature-chip"><i class="fas fa-calendar-check"></i> Event Assignment</span>
+        <span class="info-feature-chip"><i class="fas fa-search"></i> Search &amp; Filter</span>
+      </div>
+    </div>
+    <div class="col-lg-5 text-lg-end mt-3 mt-lg-0">
+      <div class="d-flex flex-wrap gap-3 justify-content-lg-end">
+        <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;min-width:110px;text-align:center;">
+          <div style="font-size:26px;font-weight:800;">{{ page_obj.paginator.count }}</div>
+          <div style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Total Vendors</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;min-width:110px;text-align:center;">
+          <div style="font-size:26px;font-weight:800;">4</div>
+          <div style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Contract States</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h5 class="fw-bold mb-1">All Vendors <span class="badge bg-primary rounded-pill">{{ page_obj.paginator.count }}</span></h5>
+    <p class="text-muted small mb-0">Manage event service vendors and contractors.</p>
+  </div>
+  {% if user.is_staff %}<a href="{% url 'vendor_add' %}" class="btn btn-primary rounded-pill px-4"><i class="fas fa-plus me-2"></i>Add Vendor</a>{% endif %}
+</div>
+
+<form method="GET" class="mb-4">
+  <div class="row g-3" style="background:var(--content-bg);border:1px solid var(--border-color);border-radius:14px;padding:18px;">
+    <div class="col-lg-4"><div class="input-group"><span class="input-group-text bg-transparent"><i class="fas fa-search text-muted"></i></span><input type="text" name="q" class="form-control" placeholder="Search vendors..." value="{{ q }}"></div></div>
+    <div class="col-lg-2"><select name="contract" class="form-select"><option value="">Contract Status</option><option value="Pending" {% if contract_filter == 'Pending' %}selected{% endif %}>Pending</option><option value="Active" {% if contract_filter == 'Active' %}selected{% endif %}>Active</option><option value="Completed" {% if contract_filter == 'Completed' %}selected{% endif %}>Completed</option><option value="Cancelled" {% if contract_filter == 'Cancelled' %}selected{% endif %}>Cancelled</option></select></div>
+    <div class="col-lg-2"><select name="payment" class="form-select"><option value="">Payment Status</option><option value="Unpaid" {% if payment_filter == 'Unpaid' %}selected{% endif %}>Unpaid</option><option value="Partial" {% if payment_filter == 'Partial' %}selected{% endif %}>Partial</option><option value="Paid" {% if payment_filter == 'Paid' %}selected{% endif %}>Paid</option></select></div>
+    <div class="col-lg-2"><button type="submit" class="btn btn-primary w-100"><i class="fas fa-search me-1"></i>Filter</button></div>
+    <div class="col-lg-2"><a href="{% url 'vendor_list' %}" class="btn btn-outline-secondary w-100"><i class="fas fa-times me-1"></i>Clear</a></div>
+  </div>
+</form>
+
+{% if vendors %}
+<div class="table-responsive" style="background:var(--content-bg);border-radius:16px;border:1px solid var(--border-color);">
+<table class="table table-hover mb-0">
+  <thead style="background:var(--table-header-bg);">
+    <tr><th class="px-4 py-3">#</th><th>Name</th><th>Company</th><th>Service</th><th>Event</th><th>Contract</th><th>Payment</th><th>Rating</th>{% if user.is_staff %}<th>Actions</th>{% endif %}</tr>
+  </thead>
+  <tbody>
+  {% for v in vendors %}
+  <tr>
+    <td class="px-4">{{ forloop.counter }}</td>
+    <td><a href="{% url 'vendor_detail' v.id %}" class="fw-bold text-decoration-none">{{ v.name }}</a><br><small class="text-muted">{% if v.email %}<i class="fas fa-envelope me-1"></i>{{ v.email }}{% endif %}</small></td>
+    <td>{{ v.company_name|default:"—" }}</td>
+    <td><span class="badge bg-info text-dark">{{ v.service_type }}</span></td>
+    <td>{% if v.assigned_event %}<a href="{% url 'event_detail' v.assigned_event.id %}" class="text-decoration-none small">{{ v.assigned_event.title }}</a>{% else %}<span class="text-muted">—</span>{% endif %}</td>
+    <td><span class="badge {% if v.contract_status == 'Active' %}bg-success{% elif v.contract_status == 'Completed' %}bg-primary{% elif v.contract_status == 'Cancelled' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ v.contract_status }}</span></td>
+    <td><span class="badge {% if v.payment_status == 'Paid' %}bg-success{% elif v.payment_status == 'Partial' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ v.payment_status }}</span></td>
+    <td><span class="text-warning">{% for i in "12345" %}{% if forloop.counter <= v.performance_rating|floatformat:0|add:"0" %}★{% else %}☆{% endif %}{% endfor %}</span> {{ v.performance_rating }}</td>
+    {% if user.is_staff %}
+    <td><div class="d-flex gap-1"><a href="{% url 'vendor_edit' v.id %}" class="btn btn-sm btn-outline-warning rounded-pill px-2"><i class="fas fa-edit"></i></a><a href="{% url 'vendor_delete' v.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-2"><i class="fas fa-trash"></i></a></div></td>
+    {% endif %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="text-center py-5" style="background:var(--content-bg);border-radius:16px;border:2px dashed var(--border-color);">
+  <i class="fas fa-handshake fa-4x text-muted mb-3 d-block"></i>
+  <h5 class="text-muted">No Vendors Found</h5>
+  {% if user.is_staff %}<a href="{% url 'vendor_add' %}" class="btn btn-primary rounded-pill px-4 mt-2"><i class="fas fa-plus me-2"></i>Add Vendor</a>{% endif %}
+</div>
+{% endif %}
+{% endblock %}
