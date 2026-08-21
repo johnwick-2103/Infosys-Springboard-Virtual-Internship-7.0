@@ -1,6 +1,6 @@
-# 🎫 EventOS — Event Registration & Management Platform
+# 🎫 EventSphere — Event Registration & Management Platform
 
-EventOS is a centralized web-based **Event Registration and Management Platform** designed to digitize and streamline the complete event lifecycle.
+EventSphere is a centralized web-based **Event Registration and Management Platform** designed to digitize and streamline the complete event lifecycle.
 
 The platform provides separate experiences for **Administrators/Organizers** and **Participants/Students**, allowing events to be created, scheduled, managed, registered, and monitored through a single system.
 
@@ -145,7 +145,7 @@ EventOS follows a Django-based web application architecture.
 
 ---
 
-# ⚙️ Getting Started — How to Run EventOS
+# ⚙️ Getting Started — How to Run EventSphere
 
 ## 1. Prerequisites
 
