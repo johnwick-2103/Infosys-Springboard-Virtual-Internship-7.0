@@ -8,7 +8,7 @@ The platform provides separate experiences for **Administrators/Organizers** and
 
 ## 🚀 Project Overview
 
-EventOS provides an integrated platform for managing the complete event lifecycle, starting from event creation and scheduling to participant registration, digital ticket generation, QR-based check-in, resource allocation, vendor management, budget tracking, reporting, and AI-powered assistance.
+EventSphere provides an integrated platform for managing the complete event lifecycle, starting from event creation and scheduling to participant registration, digital ticket generation, QR-based check-in, resource allocation, vendor management, budget tracking, reporting, and AI-powered assistance.
 
 ### 👨‍💼 Organizer / Administrator
 
@@ -160,7 +160,7 @@ Make sure you have the following installed before starting:
 ## 2. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/eventos.git
+git clone https://github.com/<your-username>/eventSphere.git
 cd eventos
 ```
 
@@ -268,5 +268,3 @@ python manage.py collectstatic
 | Start Redis | `redis-server` |
 | Start Celery | `celery -A eventos worker --loglevel=info` |
 | Run server | `python manage.py runserver` |
-
-> **Note:** Replace `eventos` in the Celery command with your actual Django project name if it differs.
